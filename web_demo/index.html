@@ -5,16 +5,16 @@
   <title>HanziLookup Rust/WASM demo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body { background-color: #fafafa; font-family: Verdana, sans-serif; padding-top: 70px; }
+    /*body { background-color: #fafafa; font-family: Verdana, sans-serif; padding-top: 70px; } */
     div, h1, h2 { position: relative; float: left; box-sizing: border-box; height: auto; overflow: auto; width: 100%; margin: 0; }
-    h1 { margin-bottom: 8px; }
+    /*h1 { margin-bottom: 8px; }
     h2 { font-weight: normal; }
     .content, .header { 
       width: 810px; margin: 0 auto; float: none; background-color: rgba(0,0,0,0); padding: 20px; color: #f0f0f0;
       border-radius: 8px;
     }
     .header { text-align: center; margin-bottom: 20px; }
-    .header a { color: #fce566; text-decoration: none; }
+    .header a { color: #fce566; text-decoration: none; }*/
     .colLeft { width: 270px; }
     .colRight { width: 500px; padding-left: 30px; }
     .drawingBoard { width: 250px; height: 250px; cursor: crosshair; clear: both; overflow: hidden; background-color: #fafafa; }
@@ -25,13 +25,13 @@
     .cmd { width: 122px; background-color: #fce7c0; text-align: center; cursor: default; padding: 3px; color: #606060; }
     .cmd.cmdUndo { float: right; }
     .cmd:hover { background-color: #f1d7a6; }
-    .charPicker { 
+    .charPicker, .oneResult, .ifResult { 
       font-family: SimHei, "Microsoft Yahei", STXihei, STHeitiSC-Medium, DengXian, sans-serif;
       border: 1px solid #a0a0a0; padding: 3px; height: 70px; width: 400px; font-size: 48px; background-color: #fafafa; overflow: hidden; 
       color: #606060;
     }
     .charPicker span { cursor: default; }
-    .hanziLookupChars { margin-bottom: 20px; }
+    /*.hanziLookupChars { margin-bottom: 20px; }*/
 
     .oneResult { background-color: #fc66db; 
                   font-size: xx-large; }
@@ -51,7 +51,6 @@
 <body>
   <div class="content">
     <div class="colLeft">
-      <h1>Stroke input</h1>
       <div class="drawingBoard loading"><span>Loading...</span></div>
       <div class="commands">
         <div class="cmd cmdUndo">Undo</div>
