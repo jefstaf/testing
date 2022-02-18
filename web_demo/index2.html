@@ -3,12 +3,36 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title></title>
+        <title>StrokeFighter</title>
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="sf.css">
         <link href="https://fonts.googleapis.com/css2?family=Liu+Jian+Mao+Cao&display=swap" rel="stylesheet">
+        <style>
+            .drawingBoard { width: 250px; height: 250px; cursor: crosshair; clear: both; overflow: hidden; }/*background-color: #fafafa; }*/
+            .drawingBoard span { display: none; }
+            .drawingBoard.loading span { display: inline; color: #606060; }
+            .commands { width: 250px; margin-top: 3px; }
+            .cmd { width: 122px; background-color: #fce7c0; text-align: center; cursor: default; padding: 3px; color: #606060; }
+            .cmd.cmdUndo { float: right; }
+            .cmd:hover { background-color: #f1d7a6; }
+            .charPicker, .oneResult, .ifResult { 
+              font-family: SimHei, "Microsoft Yahei", STXihei, STHeitiSC-Medium, DengXian, sans-serif;
+              border: 1px solid #a0a0a0; padding: 3px; height: 70px; width: 400px; font-size: 48px; background-color: #fafafa; overflow: hidden; 
+              color: #606060;
+            }
         
+            .oneResult { background-color: #fc66db; 
+                          font-size: xx-large; }
+            .ifResult { border: 5px solid #d9f00c; 
+                          font-size: xx-large; }
+
+            @media (max-width: 800px) {
+              .content, .header { width: 100%; box-sizing: border-box; }
+              .colLeft, .colRight { width: 100%; float: left; clear: both; padding-left: 0; }
+              .commands { float: left; clear: both; }
+            }
+          </style>
     </head>
     <body>
         
@@ -18,9 +42,97 @@
             <div class="overlay" id="overlay-div-3"> </div>
         </div>
 
-        
+        <div class="content">
+            <div class="colLeft">
+              <div class="drawingBoard loading"><span>Loading...</span></div>
+              <div class="commands">
+                <div class="cmd cmdUndo">Undo</div>
+                <div class="cmd cmdClear">Clear</div><br/>
+              </div>
+            </div>
+            <div class="colRight">
+              <div class="oneResult">1</div>
+              <div class="ifResult">if</div>
+            </div>  
+        </div>
+
+        <script src="jquery-3.4.1.min.js"></script>
+        <script src="drawingBoard.js"></script>
         <script src="hanzi-writer.js"></script>
         <script src="sf.js" async defer></script>
+        <script>
+            var allowableChars = ['一', '十', '我'];
+            var hanziLookupDemoApp = (function () {
+              var _drawingBoard;
+              var _worker;
+              var _start;
+        
+              $(document).ready(function () {
+                _worker = new Worker('worker.js');
+                _worker.onmessage = onWorkerMessage;
+                _worker.postMessage({ wasm_uri: 'hanzi_lookup_bg.wasm' });
+              });
+        
+              function onWorkerMessage(e) {
+                if (!e.data.what) return;
+                if (e.data.what == "loaded") initApp();
+                else if (e.data.what == "lookup") showResults(e.data.matches);
+              }
+        
+              // Initializes mini-app once all scripts have loaded
+              function initApp() {
+                $(".drawingBoard").removeClass("loading");
+                // Create handwriting canvas (this is optional, you can bring your own)
+                _drawingBoard = HanziLookup.DrawingBoard($(".drawingBoard").first(), lookup);
+                // Undo/redo commands - have to do with input
+                $(".cmdUndo").click(function (evt) {
+                  _drawingBoard.undoStroke();
+                  _drawingBoard.redraw();
+                  lookup();
+                });
+                $(".cmdClear").click(function (evt) {
+                  _drawingBoard.clearCanvas();
+                  _drawingBoard.redraw();
+                  lookup();
+                });
+              }
+        
+              // Fetches hand-drawn input from drawing board and looks up Hanzi
+              function lookup() {
+                const strokes = _drawingBoard.cloneStrokes();
+                _start = new Date().getTime();
+                _worker.postMessage({ strokes: strokes, limit: 8 });
+                //showResults(matches);
+              }
+        
+              // Populates UI with (ordered) Hanzi matches
+              function showResults(matches) {
+                var elmHost = $(".mmahLookupChars");
+                var elapsed = new Date().getTime() - _start;
+                $(".lookupTimerHL").text(elapsed + "ms");
+                elmHost.html("");
+                for (var i = 0; i != matches.length; ++i) {
+                  elmHost.append("<span>" + matches[i].hanzi + "</span>");
+                }
+        
+                //*****************
+        
+                if (matches[0]) {
+                  $(".oneResult").text(matches[0].hanzi);
+                  let filteredResults = "";
+                  for (var i = 0; i != matches.length; ++i) {
+                    if (allowableChars.includes(matches[i].hanzi)) {
+                    filteredResults += matches[i].hanzi;
+                    } 
+                    
+                  }
+        
+                  $(".ifResult").text(filteredResults)
+                }
+        
+              }
+            })();
+          </script>
     </body>
 </html>
 
