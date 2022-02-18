@@ -35,8 +35,8 @@
 
     .oneResult { background-color: #fc66db; 
                   font-size: xx-large; }
-    .ifResult { border: 5px solid #1ff00c; 
-                  font-size: xx-large;}
+    .ifResult { border: 5px solid #af0cf0; 
+                  font-size: xx-large; }
 
 
 
@@ -64,7 +64,6 @@
     </div>
     <div class="colRight">
       <h1>Recognized characters</h1>
-      <h2>Make Me a Hanzi data</h2>
       <div class="charPicker mmahLookupChars"></div>
       <div class="diagnostics">
         Elapsed: <span class="lookupTimer lookupTimerHL">--</span>
@@ -136,16 +135,19 @@
 
         //*****************
 
-        $(".oneResult").text(matches[0].hanzi);
-        let filteredResults = "";
-        for (var i = 0; i != matches.length; ++i) {
-          if (allowableChars.includes(matches[i].hanzi)) {
-           filteredResults += matches[i].hanzi;
-          } 
-          
-        }
+        if (matches[0].hanzi) {
+          $(".oneResult").text(matches[0].hanzi);
+          let filteredResults = "";
+          for (var i = 0; i != matches.length; ++i) {
+            if (allowableChars.includes(matches[i].hanzi)) {
+            filteredResults += matches[i].hanzi;
+            } 
+            
+          }
 
-        $(".ifResult").text(filteredResults)
+          $(".ifResult").text(filteredResults)
+        }
+        
         
 
 
