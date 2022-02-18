@@ -78,6 +78,7 @@
   <script src="jquery-3.4.1.min.js"></script>
   <script src="drawingBoard.js"></script>
   <script>
+    var allowableChars = ['一', '十', '我'];
     var hanziLookupDemoApp = (function () {
       var _drawingBoard;
       var _worker;
@@ -133,8 +134,17 @@
 
         //*****************
 
+        $(".oneResult").text(matches[0].hanzi);
+        let filteredResults;
+        for (var i = 0; i != matches.length; ++i) {
+          if (allowableChars.includes(matches[i])) {
+           filteredResults += matches[i].hanzi;
+          } 
+          
+        }
 
-
+        $(".ifResult").text(filteredResults)
+        
 
 
 
