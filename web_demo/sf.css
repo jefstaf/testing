@@ -65,10 +65,10 @@ img {
 
 
 
-.drawingBoard { width: 250px; height: 250px; cursor: crosshair; overflow: hidden; }/* clear: both; *background-color: #fafafa; }*/
+.drawingBoard { width: 500px; height: 500px; cursor: crosshair; overflow: hidden; }/* clear: both; *background-color: #fafafa; }*/
 .drawingBoard span { display: none; }
 .drawingBoard.loading span { display: inline; color: #606060; }
-.commands { width: 250px; margin-top: 3px; }
+/*.commands { width: 250px; margin-top: 3px; }*/
 .cmd { width: 122px; background-color: #fce7c0; text-align: center; cursor: default; padding: 3px; color: #606060; border-radius: 30px;}
 /*.cmd.cmdUndo { float: right; }*/
 .cmd:hover { background-color: #f1d7a6; }
