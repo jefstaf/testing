@@ -448,7 +448,7 @@ function overlayCharacterQuiz(char, writerNum) {
 // HANZI LOOKUP ---------------------------------
 
 
-
+/*
 var allowableChars = ['一', '十', '我'];
 var hanziLookupDemoApp = (function () {
   var _drawingBoard;
@@ -521,7 +521,7 @@ var hanziLookupDemoApp = (function () {
   }
 })();
           
-
+*/
 
 
 // CLASSES ------------------------------

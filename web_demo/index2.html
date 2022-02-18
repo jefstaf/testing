@@ -38,19 +38,20 @@
         <script src="drawingBoard.js"></script>
         <script src="hanzi-writer.js"></script>
         <script src="sf.js" async defer></script>
-        <!--<script>
+        <script>
+            // Hanzi_lookup script
             var allowableChars = ['一', '十', '我'];
             var hanziLookupDemoApp = (function () {
               var _drawingBoard;
               var _worker;
               var _start;
-            --><script>
+
               $(document).ready(function () {
                 _worker = new Worker('worker.js');
                 _worker.onmessage = onWorkerMessage;
                 _worker.postMessage({ wasm_uri: 'hanzi_lookup_bg.wasm' });
               });
-        </script><!--
+        
               function onWorkerMessage(e) {
                 if (!e.data.what) return;
                 if (e.data.what == "loaded") initApp();
@@ -110,7 +111,7 @@
         
               }
             })();
-          </script>-->
+          </script>
     </body>
 </html>
 
