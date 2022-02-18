@@ -82,9 +82,9 @@ img {
     padding-bottom: 50%;
 }
 
-.oneResult { background-color: #fc66db; }
+#oneResult { background-color: #fc66db; }
 
-.ifResult { border: 5px solid #cbdf1a; }
+#ifResult { border: 5px solid #cbdf1a; }
 
 
 
