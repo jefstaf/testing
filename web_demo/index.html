@@ -35,7 +35,7 @@
 
     .oneResult { background-color: #fc66db; 
                   font-size: x-large;}
-    .ifResult { border: 5px solid #c76c21; }
+    .ifResult { border: 5px solid #d9f00c; }
 
 
 
@@ -136,7 +136,7 @@
         //*****************
 
         $(".oneResult").text(matches[0].hanzi);
-        let filteredResults;
+        let filteredResults = "";
         for (var i = 0; i != matches.length; ++i) {
           if (allowableChars.includes(matches[i].hanzi)) {
            filteredResults += matches[i].hanzi;
