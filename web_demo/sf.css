@@ -71,6 +71,9 @@ img {
 }
 
 
+#allResults {
+    display: table;
+}
 
 .results {
     font-size: xx-large;
@@ -78,13 +81,19 @@ img {
     width: 50px;
     height: 50px;
     text-align: center;
-    padding-top: 50%;
-    padding-bottom: 50%;
+    display: table-cell;
 }
 
-#oneResult { background-color: #fc66db; }
 
-#ifResult { border: 5px solid #1adf2b; }
+
+#oneResult { 
+    background-color: #fc66db; 
+}
+
+#ifResult { 
+    border: 5px solid #1adf2b; 
+
+}
 
 
 
