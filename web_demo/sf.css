@@ -71,7 +71,7 @@ img {
 .drawingBoard span { display: none; }
 .drawingBoard.loading span { display: inline; color: #606060; }
 .commands { width: 250px; margin-top: 3px; }
-.cmd { width: 122px; background-color: #fce7c0; text-align: center; cursor: default; padding: 3px; color: #606060; }
+.cmd { width: 122px; background-color: #fce7c0; text-align: center; cursor: default; padding: 3px; color: #606060; border-radius: 30px;}
 /*.cmd.cmdUndo { float: right; }*/
 .cmd:hover { background-color: #f1d7a6; }
 .charPicker, .results { 
