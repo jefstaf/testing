@@ -445,7 +445,82 @@ function overlayCharacterQuiz(char, writerNum) {
   });
 }
 
+// HANZI LOOKUP ---------------------------------
 
+
+
+var allowableChars = ['一', '十', '我'];
+var hanziLookupDemoApp = (function () {
+  var _drawingBoard;
+  var _worker;
+  var _start;
+
+  $(document).ready(function () {
+    _worker = new Worker('worker.js');
+    _worker.onmessage = onWorkerMessage;
+    _worker.postMessage({ wasm_uri: 'hanzi_lookup_bg.wasm' });
+  });
+
+  function onWorkerMessage(e) {
+    if (!e.data.what) return;
+    if (e.data.what == "loaded") initApp();
+    else if (e.data.what == "lookup") showResults(e.data.matches);
+  }
+
+  // Initializes mini-app once all scripts have loaded
+  function initApp() {
+    $(".drawingBoard").removeClass("loading");
+    // Create handwriting canvas (this is optional, you can bring your own)
+    _drawingBoard = HanziLookup.DrawingBoard($(".drawingBoard").first(), lookup);
+    // Undo/redo commands - have to do with input
+    $(".cmdUndo").click(function (evt) {
+      _drawingBoard.undoStroke();
+      _drawingBoard.redraw();
+      lookup();
+    });
+    $(".cmdClear").click(function (evt) {
+      _drawingBoard.clearCanvas();
+      _drawingBoard.redraw();
+      lookup();
+    });
+  }
+
+  // Fetches hand-drawn input from drawing board and looks up Hanzi
+  function lookup() {
+    const strokes = _drawingBoard.cloneStrokes();
+    _start = new Date().getTime();
+    _worker.postMessage({ strokes: strokes, limit: 8 });
+    //showResults(matches);
+  }
+
+  // Populates UI with (ordered) Hanzi matches
+  function showResults(matches) {
+    var elmHost = $(".mmahLookupChars");
+    var elapsed = new Date().getTime() - _start;
+    $(".lookupTimerHL").text(elapsed + "ms");
+    elmHost.html("");
+    for (var i = 0; i != matches.length; ++i) {
+      elmHost.append("<span>" + matches[i].hanzi + "</span>");
+    }
+
+    //*****************
+
+    if (matches[0]) {
+      $(".oneResult").text(matches[0].hanzi);
+      let filteredResults = "";
+      for (var i = 0; i != matches.length; ++i) {
+        if (allowableChars.includes(matches[i].hanzi)) {
+        filteredResults += matches[i].hanzi;
+        } 
+        
+      }
+
+      $(".ifResult").text(filteredResults)
+    }
+
+  }
+})();
+          
 
 
 
