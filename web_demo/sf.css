@@ -26,7 +26,6 @@ body {
 
 #input-overlay {
     position: absolute;
-    border: 5px solid red;
 }
 
 #overlay-div-1 {
@@ -58,14 +57,16 @@ img {
 }
 
 
+.cmdUndo {
+    left: 100px;
+}
 
 
 
 
 
 
-
-.drawingBoard { width: 500px; height: 500px; cursor: crosshair; overflow: hidden; }/* clear: both; *background-color: #fafafa; }*/
+.drawingBoard { width: 250px; height: 250px; cursor: crosshair; overflow: hidden; border: 15px dotted orangered; border-radius: 30px; }/* clear: both; *background-color: #fafafa; }*/
 .drawingBoard span { display: none; }
 .drawingBoard.loading span { display: inline; color: #606060; }
 /*.commands { width: 250px; margin-top: 3px; }*/
