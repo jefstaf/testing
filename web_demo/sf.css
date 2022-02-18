@@ -67,7 +67,7 @@ img {
 
 .oneResult { background-color: #fc66db; 
               font-size: xx-large; }
-.ifResult { border: 5px solid #d9f00c; 
+.ifResult { border: 5px solid #0c23f0; 
               font-size: xx-large; }
 
 @media (max-width: 800px) {

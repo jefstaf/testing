@@ -1231,7 +1231,7 @@ function adjustOverlay() {
 
     
     if (settings.writerCount == 3) {
-        console.log("count is 3");
+        //console.log("count is 3");
     
         for (let i = 0; i < divs.length; i++) {
             let div = divs[i];
@@ -1263,7 +1263,7 @@ function adjustOverlay() {
         }
 
     } else if (settings.writerCount == 1) {
-        console.log("count is 1");
+        //console.log("count is 1");
 
         let bigOverlaySize = dimensions.overlaySize * settings.singleOverlayMultiplier;
         let smallOverlaySize = dimensions.overlaySize * (1 - bigOverlaySize) / 2;
