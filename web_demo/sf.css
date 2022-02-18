@@ -17,7 +17,8 @@ body {
 }
 
 #input-overlay {
-    margin-left: 150px;
+    position: absolute;
+    border: 5px solid rgb(125, 238, 50);
 }
 
 #overlay-div-1 {
