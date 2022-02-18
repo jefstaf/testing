@@ -93,7 +93,8 @@ var settings = {
 var dimensions = {
     canvas_width: window.innerWidth * settings.canvas_w_percent, 
     canvas_height: window.innerWidth * settings.canvas_w_percent * settings.canvas_h_w_ratio,
-    overlaySize: 0 // set by getOverlaySize function
+    overlaySize: 0, // set by getOverlaySize function
+    inputOverlaySize: 250 //  can't adust?
 }
 
 
@@ -1185,7 +1186,7 @@ function adjustOverlay() {
             });
         }
 
-    } else if (settings.writerCount == 1) {
+    } else if (settings.writerCount == 1) { // doesn't work perfectly but i'm actually using it
         //console.log("count is 1");
 
         let bigOverlaySize = dimensions.overlaySize * settings.singleOverlayMultiplier;
@@ -1264,6 +1265,20 @@ function adjustOverlay() {
         console.log("ERROR: ONLY SET UP FOR 1 or 3 WRITERS")
     }
     
+    // input overlay div
+    let inputDiv = document.getElementById("input-overlay");
+
+    let y_offset = 0;
+            
+    if (onHomeScreen) {
+      y_offset -=  touchArea.height / 2;
+    }
+
+    inputDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - (dimensions.inputOverlaySize)) / 2) + 'px';
+    inputDiv.style.top = Math.floor((window.innerHeight - dimensions.inputOverlaySize) / 2 + y_offset) + "px";
+
+
+
     
     
 }
