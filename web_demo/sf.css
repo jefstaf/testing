@@ -16,6 +16,13 @@ body {
     border: 5px solid saddlebrown;
 }
 
+.overlay {
+    position: absolute;
+    margin: 0 auto;
+    z-index: 10;
+    border: 5px solid rgb(41, 18, 2);
+}
+
 #input-overlay {
     position: absolute;
     border: 5px solid rgb(169, 50, 238);
