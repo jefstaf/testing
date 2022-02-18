@@ -15,7 +15,7 @@ body {
     z-index: 5;
     border: 5px solid saddlebrown;
 }
-/*
+
 .overlay2 {
     position: absolute;
     margin: 0 auto;
@@ -23,12 +23,10 @@ body {
     border: 5px solid rgb(41, 18, 2);
     margin-left: 200px;
 }
-*/
+
 #input-overlay {
     position: absolute;
     border: 5px solid red;
-    margin-left: 300px;
-    left:100px;
 }
 
 #overlay-div-1 {
