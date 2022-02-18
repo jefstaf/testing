@@ -29,8 +29,8 @@
               <!--</div>-->
             <!--</div>
             <div class="colRight">-->
-                <div class="results overlay" id="oneResult">1</div>
-                <div class="results overlay" id="ifResult">if</div>
+                <div class="results overlay" id="oneResult"><p id="oneResultP">1</p></div>
+                <div class="results overlay" id="ifResult"><p id = "ifResultP">if</p></div>
             <!--</div>-->
         </div>
 
@@ -97,7 +97,7 @@
                 //*****************
         
                 if (matches[0]) {
-                  $(".oneResult").text(matches[0].hanzi);
+                  $("#oneResultP").text(matches[0].hanzi);
                   let filteredResults = "";
                   for (var i = 0; i != matches.length; ++i) {
                     if (allowableChars.includes(matches[i].hanzi)) {
@@ -106,7 +106,7 @@
                     
                   }
         
-                  $(".ifResult").text(filteredResults)
+                  $("#ifResultP").text(filteredResults)
                 }
         
               }
