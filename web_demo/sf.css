@@ -1,0 +1,45 @@
+body {
+    background-color: white;
+    overflow: hidden; /* Hide scrollbars */
+}
+
+
+#canvas-wrap {
+    margin: 0 auto;
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+    margin: 0 auto;
+    z-index: 5;
+    border: 5px solid saddlebrown;
+}
+
+#overlay-div-1 {
+    position: absolute;
+    margin-left: 100px;
+}
+
+#overlay-div-3 {
+    position: absolute;
+    margin-left: 200px;
+}
+
+#overlay-div-2 {
+    position: absolute;
+    margin-left: 300px;
+}
+
+#canvas1 {
+    display: block;
+    margin: 0 auto;
+    position: absolute;
+    border: 0px solid #fcc;
+    top: 0;
+}
+
+
+img {
+    display: none;
+}
