@@ -70,7 +70,9 @@ img {
   color: #606060;
 }
 
-.oneResult, .ifResult {
+
+
+.results {
     font-size: xx-large;
     border-radius: 25px;
     width: 50px;
@@ -79,7 +81,12 @@ img {
 
 .oneResult { background-color: #fc66db; }
 
-.ifResult { border: 5px solid #c70e0e; }
+.ifResult { border: 5px solid #df691a; }
+
+
+
+
+
 
 @media (max-width: 800px) {
   .content, .header { width: 100%; box-sizing: border-box; }
