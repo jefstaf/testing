@@ -66,7 +66,7 @@ img {
 
 
 
-.drawingBoard { width: 250px; height: 250px; cursor: crosshair; overflow: hidden; border: 15px dotted orangered; border-radius: 90px; }/* clear: both; *background-color: #fafafa; }*/
+.drawingBoard { width: 250px; height: 250px; cursor: crosshair; overflow: hidden; border: 15px dotted rgb(93, 223, 34); border-radius: 90px; }/* clear: both; *background-color: #fafafa; }*/
 .drawingBoard span { display: none; }
 .drawingBoard.loading span { display: inline; color: #606060; }
 /*.commands { width: 250px; margin-top: 3px; }*/
