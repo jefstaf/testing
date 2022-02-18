@@ -35,7 +35,7 @@
 
     .oneResult { background-color: #fc66db; 
                   font-size: xx-large; }
-    .ifResult { border: 5px solid #d9f00c; 
+    .ifResult { border: 5px solid #1ff00c; 
                   font-size: xx-large;}
 
 
@@ -121,7 +121,7 @@
         const strokes = _drawingBoard.cloneStrokes();
         _start = new Date().getTime();
         _worker.postMessage({ strokes: strokes, limit: 8 });
-        showResults(matches);
+        //showResults(matches);
       }
 
       // Populates UI with (ordered) Hanzi matches
