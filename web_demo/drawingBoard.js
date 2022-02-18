@@ -78,6 +78,7 @@ HanziLookup.DrawingBoard = (function (elmHost, strokeFinished) {
   // Draws a clear canvas, with gridlines
   function drawClearCanvas() {
     _ctx.clearRect(0, 0, _ctx.canvas.width, _ctx.canvas.height);
+    /*
     _ctx.setLineDash([1, 1]);
     _ctx.lineWidth = 0.5;
     _ctx.strokeStyle = "grey";
@@ -104,6 +105,7 @@ HanziLookup.DrawingBoard = (function (elmHost, strokeFinished) {
     _ctx.moveTo(0, _ctx.canvas.height / 2);
     _ctx.lineTo(_ctx.canvas.width, _ctx.canvas.height / 2);
     _ctx.stroke();
+    */
   }
 
   function startClick(x, y) {
