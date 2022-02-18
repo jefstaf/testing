@@ -32,6 +32,13 @@
     }
     .charPicker span { cursor: default; }
     .hanziLookupChars { margin-bottom: 20px; }
+
+    .oneResult { background-color: #fce566; }
+
+
+
+
+
     @media (max-width: 800px) {
       .content, .header { width: 100%; box-sizing: border-box; }
       .colLeft, .colRight { width: 100%; float: left; clear: both; padding-left: 0; }
@@ -60,6 +67,7 @@
       <div class="diagnostics">
         Elapsed: <span class="lookupTimer lookupTimerHL">--</span>
       </div>
+      <div class="oneResult">New Div</div>
     </div>  
   </div>
 
@@ -118,6 +126,25 @@
         for (var i = 0; i != matches.length; ++i) {
           elmHost.append("<span>" + matches[i].hanzi + "</span>");
         }
+
+        //*****************
+
+
+
+
+
+
+
+
+
+        //************************
+
+
+
+
+
+
+
       }
     })();
   </script>
