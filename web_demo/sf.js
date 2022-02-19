@@ -693,6 +693,7 @@ class Level {
         console.log("\nCurrent Session:", this.game.currentSession);
         if (this.game.currentSession instanceof FightingSession) {
             settings.writerCount = 1;
+            emptyWriters();
             turnOnInput();  
             this.spawnEnemies();
         } else if (this.game.currentSession instanceof TrainingSession) {
@@ -702,6 +703,7 @@ class Level {
         } else {
             // build
             settings.writerCount = 3;
+            emptyWriters();
             turnOffInput(); 
         }
     }
@@ -1407,10 +1409,10 @@ function adjustOverlay() {
 // DRAW --------------------------------------------------
 
 function clearScreen() {
-  for (let j = 0; j < writers.length; j++) {
+  /*for (let j = 0; j < writers.length; j++) {
       let writer = writers[j];
-      //writer.hideCharacter();
-  }
+      writer.hideCharacter();
+  }*/
   context.save();
   context.fillStyle = settings.canvas_bg_color;
   context.fillRect(0,0,dimensions.canvas_width, dimensions.canvas_height);
