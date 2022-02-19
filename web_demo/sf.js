@@ -55,7 +55,7 @@
 // GLOBAL ------------------------------------------------
 
 var onHomeScreen = false;
-var allowInput = true; // change to false after bug fixing
+var allowInput = false; // change to false after bug fixing
 
 var game;
 var timeCounter = 0;
@@ -84,15 +84,28 @@ var settings = {
     infoText_y: 0.25,
     instructions_y: 0.80,
 
-    titleText1_y: 0.33,
+    titleText1_y: 0.30,
     titleText2_y: 0.65,
     touchAreaHeight: 0.75,
 
-    inputButton_height: 0.05,
+    inputOverlayBorderRadius: .25,
+
+    inputButton_height: 0.10,
     inputButton_width: 0.10,
+    clearDiv_x: 0.07,
+    undoDiv_x: 0.19,
     inputButton_y: 0.85,
-    inputResult_size: 0.05,
-    inputResult_y: 0.90,
+    inputButtonBorderRadius: 0.25,
+
+    oneResult_size: 0.15,
+    oneResult_x: 0.50,
+    oneResultBorderRadius: 0,
+    oneResult_y: 0.77,
+
+    ifResult_size: 0.10,
+    ifResult_x: 0.91,
+    ifResultBorderRadius: .25,
+    ifResult_y: 0.85,
 
     fullScreenControl_size: 0.05
 };
@@ -102,9 +115,10 @@ var dimensions = {
     canvas_height: window.innerWidth * settings.canvas_w_percent * settings.canvas_h_w_ratio,
     overlaySize: 0, // set by getOverlaySize function
     inputOverlaySize: 250, //  can't adust?
-    inputButton_W: 50,
-    inputButton_H: 20,
-    inputResultSize: 50
+    inputButton_W: 0, // set by adjustOverlay function
+    inputButton_H: 0, // set by adjustOverlay function
+    ifResultSize: 0, // set by adjustOverlay function
+    oneResultSize: 0 // set by adjustOverlay function
 }
 
 
@@ -181,7 +195,15 @@ const backgroundSources = [
 
 function getOverlaySizes() {
     dimensions.overlaySize = Math.min(dimensions.canvas_height, dimensions.canvas_width * settings.writerSize);
-}
+
+    dimensions.inputButton_W = dimensions.canvas_width * settings.inputButton_width;
+    dimensions.inputButton_H = dimensions.canvas_width * settings.inputButton_height;
+    dimensions.oneResultSize = dimensions.canvas_width * settings.oneResult_size;
+    dimensions.ifResultSize = dimensions.canvas_width * settings.ifResult_size;
+      
+    
+
+  }
 
 function updateFontSizes() {
     fonts.titleLarge = Math.round(dimensions.canvas_width * 0.30) + "px STXingKai";
@@ -1260,17 +1282,17 @@ function adjustOverlay() {
               div.style.marginLeft = 0;
               if (i != 1) {
                 //outer overlays
-                div.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - (smallOverlaySize)) / 2) + 'px';
+                div.style.left = Math.floor((window.innerWidth * settings.canvas_w_correction - (smallOverlaySize)) / 2) + 'px';
                 div.style.marginTop = ( (i == 0) ? 0 : Math.floor(smallOverlaySize + bigOverlaySize) ) + "px";
               } else {
                 //middle overlay
-                div.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - (bigOverlaySize)) / 2) + 'px';
+                div.style.left = Math.floor((window.innerWidth * settings.canvas_w_correction - (bigOverlaySize)) / 2) + 'px';
                 div.style.marginTop = Math.floor(smallOverlaySize) + "px";
               }
 
             } else {
               // landscape mode
-              div.style.left = Math.round((window.innerWidth - 2 * smallOverlaySize - bigOverlaySize) / 2) + 'px';
+              div.style.left = Math.floor((window.innerWidth - 2 * smallOverlaySize - bigOverlaySize) / 2) + 'px';
               div.style.marginTop = 0;
 
               if (i != 1) {
@@ -1313,7 +1335,7 @@ function adjustOverlay() {
     
 
 
-    // input overlay divs
+    // input overlay divs overlaysizes
 
     let inputDiv = document.getElementById("input-overlay");
     let clearDiv = document.getElementById("cmdClear");
@@ -1321,54 +1343,65 @@ function adjustOverlay() {
     let oneResultDiv = document.getElementById("oneResult");
     let ifResultDiv = document.getElementById("ifResult");
 
+    let inputButtons = [clearDiv, undoDiv, ifResultDiv]; 
+
     if (allowInput) {
       let y_offset = 0;    
       if (onHomeScreen) {
         y_offset -=  touchArea.height / 2;
       }
+      let x_margin = (window.innerWidth * settings.canvas_w_correction - dimensions.canvas_width) / 2;
 
       inputDiv.style.display = 'block';
-      clearDiv.style.display = 'block';
-      undoDiv.style.display = 'block';
+      //clearDiv.style.display = 'block';
+      //undoDiv.style.display = 'block';
       oneResultDiv.style.display = 'block';
-      ifResultDiv.style.display = 'block';
+      //ifResultDiv.style.display = 'block';
+
+      for (let n=0; n < inputButtons.length; n++) {
+        let b = inputButtons[n];
+        b.style.display = 'block';
+      }
 
       
-      inputDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - (dimensions.inputOverlaySize)) / 2) + 'px';
+      inputDiv.style.left = Math.floor((window.innerWidth * settings.canvas_w_correction - (dimensions.inputOverlaySize)) / 2) + 'px';
       inputDiv.style.top = Math.floor((window.innerHeight - dimensions.inputOverlaySize) / 2 + y_offset) + "px";
       inputDiv.style.width = dimensions.inputOverlaySize + 'px';
       inputDiv.style.height = dimensions.inputOverlaySize + 'px';
       inputDiv.style.border = "10px dotted black";
+      inputDiv.style.borderRadius = Math.floor(dimensions.inputOverlaySize * settings.inputOverlayBorderRadius) + 'px';
 
       
-      dimensions.inputButton_W = dimensions.canvas_width * settings.inputButton_height;
-      dimensions.inputButton_H = dimensions.canvas_height * settings.inputButton_width;
+      
       clearDiv.style.width = Math.floor(dimensions.inputButton_W) + "px"
       clearDiv.style.height = Math.floor(dimensions.inputButton_H) + "px"
-      clearDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - 3 * (dimensions.inputButton_W)) / 2) + 'px';
+      clearDiv.style.left = Math.floor(x_margin + (dimensions.canvas_width * settings.clearDiv_x) - dimensions.inputButton_W/2) + 'px'; // Math.round((window.innerWidth * settings.canvas_w_correction - 3 * (dimensions.inputButton_W)) / 2) + 'px';
       clearDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputButton_y) + "px";
       clearDiv.style.lineHeight = Math.floor(dimensions.inputButton_H) + "px";
+      clearDiv.style.borderRadius = Math.floor(dimensions.inputButton_H * settings.inputButtonBorderRadius) + 'px';
       
       undoDiv.style.width = Math.floor(dimensions.inputButton_W) + "px"
       undoDiv.style.height = Math.floor(dimensions.inputButton_H) + "px"
-      undoDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction + (dimensions.inputButton_W)) / 2) + 'px';
+      undoDiv.style.left = Math.floor(x_margin + (dimensions.canvas_width * settings.undoDiv_x) - dimensions.inputButton_W/2) + 'px';
       undoDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputButton_y) + "px";
       undoDiv.style.lineHeight = Math.floor(dimensions.inputButton_H) + "px";
+      undoDiv.style.borderRadius = Math.floor(dimensions.inputButton_H * settings.inputButtonBorderRadius) + 'px';
 
-      
-      dimensions.inputResultSize = dimensions.canvas_width * settings.inputResult_size;
-      oneResultDiv.style.width = Math.floor(dimensions.inputResultSize) + "px"
-      oneResultDiv.style.height = Math.floor(dimensions.inputResultSize) + "px"
-      oneResultDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - 3 * (dimensions.inputResultSize)) / 2) + 'px';
-      oneResultDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputResult_y) + "px";
-      oneResultDiv.style.lineHeight = Math.floor(dimensions.inputResultSize) + "px";
 
-      
-      ifResultDiv.style.width = Math.floor(dimensions.inputResultSize) + "px"
-      ifResultDiv.style.height = Math.floor(dimensions.inputResultSize) + "px"
-      ifResultDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction + (dimensions.inputResultSize)) / 2) + 'px';
-      ifResultDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputResult_y) + "px";
-      ifResultDiv.style.lineHeight = Math.floor(dimensions.inputResultSize) + "px";
+      oneResultDiv.style.width = Math.floor(dimensions.oneResultSize) + "px"
+      oneResultDiv.style.height = Math.floor(dimensions.oneResultSize) + "px"
+      oneResultDiv.style.left = Math.floor(x_margin + (dimensions.canvas_width * settings.oneResult_x) - dimensions.oneResultSize/2) + 'px';
+      oneResultDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.oneResult_y) + "px";
+      oneResultDiv.style.lineHeight = Math.floor(dimensions.oneResultSize) + "px";
+      oneResultDiv.style.borderRadius = Math.floor(dimensions.oneResultSize * settings.oneResultBorderRadius) + 'px';
+
+
+      ifResultDiv.style.width = Math.floor(dimensions.ifResultSize) + "px"
+      ifResultDiv.style.height = Math.floor(dimensions.ifResultSize) + "px"
+      ifResultDiv.style.left = Math.floor(x_margin + (dimensions.canvas_width * settings.ifResult_x) - dimensions.ifResultSize/2) + 'px';
+      ifResultDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.ifResult_y) + "px";
+      ifResultDiv.style.lineHeight = Math.floor(dimensions.ifResultSize) + "px";
+      ifResultDiv.style.borderRadius = Math.floor(dimensions.ifResultSize * settings.ifResultBorderRadius) + 'px';
     
     } else {
       // allowInput = false

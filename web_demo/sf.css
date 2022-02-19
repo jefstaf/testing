@@ -1,6 +1,6 @@
 body {
     background-color: white;
-    /*overflow: hidden; /* Hide scrollbars */
+    overflow: hidden; /* Hide scrollbars */
 }
 
 
@@ -18,9 +18,9 @@ body {
 
 .overlay2 {
     position: absolute;
-    margin: 0 auto;
+    /*margin: 0 auto;*/
     z-index: 10;
-    border: 5px solid rgb(41, 18, 2);
+    /*border: 5px solid rgb(41, 18, 2);*/
     /*margin-left: 200px;*/
 }
 
@@ -28,26 +28,12 @@ body {
     position: absolute;
 }
 
-#overlay-div-1 {
-    position: absolute;
-    margin-left: 100px;
-}
-
-#overlay-div-2 {
-    position: absolute;
-    margin-left: 200px;
-}
-
-#overlay-div-3 {
-    position: absolute;
-    margin-left: 300px;
-}
 
 #canvas1 {
     display: block;
     margin: 0 auto;
     position: absolute;
-    border: 0px solid #fcc;
+    /*border: 0px solid #fcc;*/
     top: 0;
 }
 
@@ -57,7 +43,7 @@ img {
 }
 
 
-
+/*
 .cmdUndo {
     left: 100px;
 }
@@ -73,88 +59,65 @@ img {
     position: relative;
     text-align: center;
 }
-
+*/
 
 .results {
-    font-size: xx-large;
-    border-radius: 50px;
-    width: 50px;
-    height: 50px;
+    /*font-size: xx-large;*/
+    /*border-radius: 30px;*/
+    /*width: 50px;
+    height: 50px;*/
     text-align: center;
-    position: relative;
+    position: absolute;
 }
 
-.results p {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    display: inline-block;
-    vertical-align: middle;
-    line-height: normal;
+
+.hidden {
+    display: none;
 }
+
+
+.drawingBoard { 
+    cursor: crosshair; 
+    overflow: hidden; 
+}
+.drawingBoard span { display: none; }
+.drawingBoard.loading {text-align: center; }
+.drawingBoard.loading span { display: inline; color: #666;  }
+
 
 #oneResult { 
-    background-color: #fc66db; 
-    left: 100px;
-}
-
-#ifResult { 
-    border: 5px solid #097442; 
-    left: 300px;
+    background-color: white; 
+    border: 3px solid black;
 }
 
 
 
-
-.drawingBoard { width: 250px; height: 250px; cursor: crosshair; overflow: hidden; border: 15px dotted rgb(93, 223, 34); border-radius: 90px; }/* clear: both; *background-color: #fafafa; }*/
-.drawingBoard span { display: none; }
-.drawingBoard.loading span { display: inline; color: #606060; }
-
-.drawingBoard.hidden {
-    width: 10px;
-    height: 10px;
-    cursor: default;
-    overflow: hidden;
-    border: 0px solid black;
-}
-
-.cmd.hidden {
-    width: 10px;
-    height: 10px;
-    cursor: default;
-    overflow: hidden;
-    border: 0px solid black;
-}
-
-.results.hidden {
-    width: 10px;
-    height: 10px;
-    cursor: default;
-    overflow: hidden;
-    border: 0px solid black;
+.cmd, #ifResult { 
+    width: 122px; 
+    background-color: #e3111170; 
+    text-align: center; 
+    cursor: default; 
+    padding: 0px; 
+    color: white;
 }
 
 
 
+.cmd:hover, #ifResult:hover { 
+    background-color: #e31111; 
+    color: #fff;
+}
 
-/*.commands { width: 250px; margin-top: 3px; }*/
-.cmd { width: 122px; background-color: #fce7c0; text-align: center; cursor: default; padding: 3px; color: #606060; border-radius: 30px;}
-/*.cmd.cmdUndo { float: right; }*/
-.cmd:hover { background-color: #f1d7a6; }
-.charPicker, .results { 
-  font-family: SimHei, "Microsoft Yahei", STXihei, STHeitiSC-Medium, DengXian, sans-serif;
-  border: 1px solid #a0a0a0; padding: 3px; height: 70px; width: 400px; font-size: 48px; background-color: #fafafa; overflow: hidden; 
-  color: #606060;
+.results { 
+  /*font-family: SimHei, "Microsoft Yahei", STXihei, STHeitiSC-Medium, DengXian, sans-serif;
+  border: 1px solid #a0a0a0; 
+  padding: 3px; 
+  height: 70px; 
+  width: 400px; 
+  font-size: 48px; 
+  background-color: #fafafa; 
+  overflow: hidden; 
+  color: #606060;*/
 }
 
 
-
-/*
-@media (max-width: 800px) {
-  .content, .header { width: 100%; box-sizing: border-box; }
-  .colLeft, .colRight { width: 100%; float: left; clear: both; padding-left: 0; }
-  .commands { float: left; clear: both; }
-}
-*/
