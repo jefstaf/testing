@@ -1303,7 +1303,7 @@ function adjustOverlay() {
 
     let clearDiv = document.getElementById("cmdClear");
     clearDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - 3 * (dimensions.inputButton_W)) / 2) + 'px';
-    undoDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputButton_y) + "px";
+    clearDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputButton_y) + "px";
 
     let undoDiv = document.getElementById("cmdUndo");
     undoDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction + (dimensions.inputButton_W)) / 2) + 'px';
