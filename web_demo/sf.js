@@ -1365,7 +1365,7 @@ function adjustOverlay() {
     } else {
       // allowInput = false
 
-      
+      /*
       inputDiv.style.width = '0px';
       inputDiv.style.height = '0px';
       inputDiv.style.border = "0px dotted black";
@@ -1387,6 +1387,13 @@ function adjustOverlay() {
       ifResultDiv.style.width = Math.floor(dimensions.inputResultSize) + "px";
       ifResultDiv.style.height = Math.floor(dimensions.inputResultSize) + "px";
       ifResultDiv.style.lineHeight = Math.floor(dimensions.inputResultSize) + "px";
+      */
+
+      inputDiv.style.display = 'none';
+      clearDiv.style.display = 'none';
+      undoDiv.style.display = 'none';
+      oneResultDiv.style.display = 'none';
+      ifResultDiv.style.display = 'none';
     }
 }
 
