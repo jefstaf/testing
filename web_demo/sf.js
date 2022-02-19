@@ -1325,6 +1325,12 @@ function adjustOverlay() {
         y_offset -=  touchArea.height / 2;
       }
 
+      inputDiv.style.display = 'block';
+      clearDiv.style.display = 'block';
+      undoDiv.style.display = 'block';
+      oneResultDiv.style.display = 'block';
+      ifResultDiv.style.display = 'block';
+
       
       inputDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - (dimensions.inputOverlaySize)) / 2) + 'px';
       inputDiv.style.top = Math.floor((window.innerHeight - dimensions.inputOverlaySize) / 2 + y_offset) + "px";
