@@ -100,7 +100,8 @@ var settings = {
     oneResult_size: 0.15,
     oneResult_x: 0.50,
     oneResultBorderRadius: 0,
-    oneResult_y: 0.77,
+    oneResult_y: 0.75,
+    oneResultTextPadding: 0.10,
 
     ifResult_size: 0.10,
     ifResult_x: 0.91,
@@ -195,23 +196,25 @@ const backgroundSources = [
 
 function getOverlaySizes() {
     dimensions.overlaySize = Math.min(dimensions.canvas_height, dimensions.canvas_width * settings.writerSize);
-
     dimensions.inputButton_W = dimensions.canvas_width * settings.inputButton_width;
     dimensions.inputButton_H = dimensions.canvas_width * settings.inputButton_height;
     dimensions.oneResultSize = dimensions.canvas_width * settings.oneResult_size;
-    dimensions.ifResultSize = dimensions.canvas_width * settings.ifResult_size;
-      
-    
-
+    dimensions.ifResultSize = dimensions.canvas_width * settings.ifResult_size; 
   }
 
 function updateFontSizes() {
-    fonts.titleLarge = Math.round(dimensions.canvas_width * 0.30) + "px STXingKai";
-    fonts.titleSmall = Math.round(dimensions.canvas_width * 0.22) + "px ComforterBrush";
-    fonts.clickToStart = Math.round(dimensions.canvas_width * 0.05) + "px Mali";
-    fonts.topText = Math.round(dimensions.canvas_width * 0.05) + "px RockSalt";
-    fonts.infoText = Math.round(dimensions.canvas_width * 0.03) + "px Mali";
-    fonts.instructions = Math.round(dimensions.canvas_width * 0.03) + "px Mali";
+    fonts.titleLarge = Math.floor(dimensions.canvas_width * 0.30) + "px STXingKai";
+    fonts.titleSmall = Math.floor(dimensions.canvas_width * 0.22) + "px ComforterBrush";
+    fonts.clickToStart = Math.floor(dimensions.canvas_width * 0.05) + "px Mali";
+
+    fonts.topText = Math.floor(dimensions.canvas_width * 0.05) + "px RockSalt";
+    fonts.infoText = Math.floor(dimensions.canvas_width * 0.03) + "px Mali";
+    fonts.instructions = Math.floor(dimensions.canvas_width * 0.03) + "px Mali";
+
+    fonts.cmdClear = Math.floor(dimensions.inputButton_H) * 0.70 + "px sans-serif";
+    fonts.cmdUndo = Math.floor(dimensions.inputButton_H) * 0.60 + "px sans-serif";
+    fonts.oneResult = Math.floor(dimensions.oneResultSize * (1-settings.oneResultTextPadding)) + "px STXingKai";
+    fonts.ifResult = Math.floor(dimensions.ifResultSize) + "px STXingKai";
 }
 
 
@@ -1503,30 +1506,36 @@ function adjustOverlay() {
       clearDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputButton_y) + "px";
       clearDiv.style.lineHeight = Math.floor(dimensions.inputButton_H) + "px";
       clearDiv.style.borderRadius = Math.floor(dimensions.inputButton_H * settings.inputButtonBorderRadius) + 'px';
-      
+      clearDiv.style.font = fonts.cmdClear;
+
+
       undoDiv.style.width = Math.floor(dimensions.inputButton_W) + "px"
       undoDiv.style.height = Math.floor(dimensions.inputButton_H) + "px"
       undoDiv.style.left = Math.floor(x_margin + (dimensions.canvas_width * settings.undoDiv_x) - dimensions.inputButton_W/2) + 'px';
       undoDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputButton_y) + "px";
       undoDiv.style.lineHeight = Math.floor(dimensions.inputButton_H) + "px";
       undoDiv.style.borderRadius = Math.floor(dimensions.inputButton_H * settings.inputButtonBorderRadius) + 'px';
+      undoDiv.style.font = fonts.cmdUndo;
 
 
       oneResultDiv.style.width = Math.floor(dimensions.oneResultSize) + "px"
       oneResultDiv.style.height = Math.floor(dimensions.oneResultSize) + "px"
       oneResultDiv.style.left = Math.floor(x_margin + (dimensions.canvas_width * settings.oneResult_x) - dimensions.oneResultSize/2) + 'px';
       oneResultDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.oneResult_y) + "px";
-      oneResultDiv.style.lineHeight = Math.floor(dimensions.oneResultSize) + "px";
       oneResultDiv.style.borderRadius = Math.floor(dimensions.oneResultSize * settings.oneResultBorderRadius) + 'px';
+      oneResultDiv.style.font = fonts.oneResult;
+      oneResultDiv.style.paddingTop = Math.floor(dimensions.oneResultSize * settings.oneResultTextPadding) + "px";
+      oneResultDiv.style.lineHeight = Math.floor(dimensions.oneResultSize) + "px";
 
 
       ifResultDiv.style.width = Math.floor(dimensions.ifResultSize) + "px"
       ifResultDiv.style.height = Math.floor(dimensions.ifResultSize) + "px"
       ifResultDiv.style.left = Math.floor(x_margin + (dimensions.canvas_width * settings.ifResult_x) - dimensions.ifResultSize/2) + 'px';
       ifResultDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.ifResult_y) + "px";
-      ifResultDiv.style.lineHeight = Math.floor(dimensions.ifResultSize) + "px";
       ifResultDiv.style.borderRadius = Math.floor(dimensions.ifResultSize * settings.ifResultBorderRadius) + 'px';
-    
+      ifResultDiv.style.font = fonts.ifResult;
+      ifResultDiv.style.lineHeight = Math.floor(dimensions.ifResultSize) + "px";
+
     } else {
       // allowInput = false
 
@@ -1935,7 +1944,13 @@ function loadFonts() {
       //console.log('Font loaded: Mali');
       adjustHomeScreenSize();
     });
-    
+    var fontComforterBrush = new FontFace('ComforterBrush', 'url(fonts/ComforterBrush-Regular.ttf)');
+    fontComforterBrush.load().then(function(font){
+      document.fonts.add(font);
+      //console.log('Font loaded: Comforter Brush');
+      adjustHomeScreenSize();
+    });
+    /*
     var fontAnnie = new FontFace('Annie', 'url(fonts/AnnieUseYourTelescope-Regular.ttf)');
     fontAnnie.load().then(function(font){
       document.fonts.add(font);
@@ -1948,26 +1963,20 @@ function loadFonts() {
       //console.log('Font loaded: Arima');
       adjustHomeScreenSize();
     });
-    var fontComforterBrush = new FontFace('ComforterBrush', 'url(fonts/ComforterBrush-Regular.ttf)');
-    fontComforterBrush.load().then(function(font){
-      document.fonts.add(font);
-      //console.log('Font loaded: Comforter Brush');
-      adjustHomeScreenSize();
-    });
     var fontDekko = new FontFace('Dekko', 'url(fonts/Dekko-Regular.ttf)');
     fontDekko.load().then(function(font){
       document.fonts.add(font);
       //console.log('Font loaded: Dekko');
       adjustHomeScreenSize();
     });
-    
     var fontSriracha = new FontFace('Sriracha', 'url(fonts/Sriracha-Regular.ttf)');
     fontSriracha.load().then(function(font){
       document.fonts.add(font);
       //console.log('Font loaded: Sriracha');
       adjustHomeScreenSize();
     });
-    
+    */
+
 }
 
 
