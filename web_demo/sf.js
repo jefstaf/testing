@@ -328,6 +328,15 @@ const levelPlans = [                     // ***** //
     'train:char_king:4'
 ];
 
+// HANZI LOOKUP INPUT -----------------------------------
+
+function attack(e) {
+  console.log(e);
+  let char = $("ifResult").text;
+  console.log(char);
+
+}
+
 // HANZI WRITER ------------------------------------------
 
 var writer1 = HanziWriter.create('overlay-div-1', '一', {
