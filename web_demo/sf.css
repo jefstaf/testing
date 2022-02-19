@@ -33,12 +33,12 @@ body {
     margin-left: 100px;
 }
 
-#overlay-div-3 {
+#overlay-div-2 {
     position: absolute;
     margin-left: 200px;
 }
 
-#overlay-div-2 {
+#overlay-div-3 {
     position: absolute;
     margin-left: 300px;
 }
@@ -55,6 +55,7 @@ body {
 img {
     display: none;
 }
+
 
 
 .cmdUndo {
@@ -89,7 +90,9 @@ img {
     bottom: 0;
     right: 0;
     left: 0;
-
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
 }
 
 #oneResult { 
