@@ -452,14 +452,14 @@ function overlayCharacterQuiz(char, writerNum) {
 
 
 
-turnOnInput() {
+function turnOnInput() {
   allowInput = true;
   $(".hideable").removeClass("hidden");
 
 }
 
 
-turnOffInput() {
+function turnOffInput() {
   allowInput = true;
   $(".hideable").addClass("hidden");
 }
