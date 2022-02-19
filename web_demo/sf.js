@@ -55,7 +55,7 @@
 // GLOBAL ------------------------------------------------
 
 var onHomeScreen = false;
-var allowInput = true; // change to false after bug fixing
+var allowInput = false; 
 
 var game;
 var timeCounter = 0;
@@ -1096,7 +1096,7 @@ class BuildingSession {
 
   resetProgress() {
 
-    
+
   }
 }
 
