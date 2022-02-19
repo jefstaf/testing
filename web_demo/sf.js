@@ -467,7 +467,7 @@ function turnOnInput() {
 
 
 function turnOffInput() {
-  allowInput = true;
+  allowInput = false;
   $(".hideable").addClass("hidden");
 }
 
@@ -1312,47 +1312,77 @@ function adjustOverlay() {
 
 
     // input overlay divs
-    let y_offset = 0;    
-    if (onHomeScreen) {
-      y_offset -=  touchArea.height / 2;
-    }
 
     let inputDiv = document.getElementById("input-overlay");
-    inputDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - (dimensions.inputOverlaySize)) / 2) + 'px';
-    inputDiv.style.top = Math.floor((window.innerHeight - dimensions.inputOverlaySize) / 2 + y_offset) + "px";
-
-
     let clearDiv = document.getElementById("cmdClear");
-    dimensions.inputButton_W = dimensions.canvas_width * settings.inputButton_height;
-    dimensions.inputButton_H = dimensions.canvas_height * settings.inputButton_width;
-    clearDiv.style.width = Math.floor(dimensions.inputButton_W) + "px"
-    clearDiv.style.height = Math.floor(dimensions.inputButton_H) + "px"
-    clearDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - 3 * (dimensions.inputButton_W)) / 2) + 'px';
-    clearDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputButton_y) + "px";
-
     let undoDiv = document.getElementById("cmdUndo");
-    undoDiv.style.width = Math.floor(dimensions.inputButton_W) + "px"
-    undoDiv.style.height = Math.floor(dimensions.inputButton_H) + "px"
-    undoDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction + (dimensions.inputButton_W)) / 2) + 'px';
-    undoDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputButton_y) + "px";
-
-
     let oneResultDiv = document.getElementById("oneResult");
-    dimensions.inputResultSize = dimensions.canvas_width * settings.inputResult_size;
-    oneResultDiv.style.width = Math.floor(dimensions.inputResultSize) + "px"
-    oneResultDiv.style.height = Math.floor(dimensions.inputResultSize) + "px"
-    oneResultDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - 3 * (dimensions.inputResultSize)) / 2) + 'px';
-    oneResultDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputResult_y) + "px";
-
-
     let ifResultDiv = document.getElementById("ifResult");
-    oneResultDiv.style.width = Math.floor(dimensions.inputResultSize) + "px"
-    oneResultDiv.style.height = Math.floor(dimensions.inputResultSize) + "px"
-    ifResultDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction + (dimensions.inputResultSize)) / 2) + 'px';
-    ifResultDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputResult_y) + "px";
+
+    if (allowInput) {
+      let y_offset = 0;    
+      if (onHomeScreen) {
+        y_offset -=  touchArea.height / 2;
+      }
+
+      
+      inputDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - (dimensions.inputOverlaySize)) / 2) + 'px';
+      inputDiv.style.top = Math.floor((window.innerHeight - dimensions.inputOverlaySize) / 2 + y_offset) + "px";
+      inputDiv.style.width = dimensions.inputOverlaySize + 'px';
+      inputDiv.style.height = dimensions.inputOverlaySize + 'px';
+
+      
+      dimensions.inputButton_W = dimensions.canvas_width * settings.inputButton_height;
+      dimensions.inputButton_H = dimensions.canvas_height * settings.inputButton_width;
+      clearDiv.style.width = Math.floor(dimensions.inputButton_W) + "px"
+      clearDiv.style.height = Math.floor(dimensions.inputButton_H) + "px"
+      clearDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - 3 * (dimensions.inputButton_W)) / 2) + 'px';
+      clearDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputButton_y) + "px";
+
+      
+      undoDiv.style.width = Math.floor(dimensions.inputButton_W) + "px"
+      undoDiv.style.height = Math.floor(dimensions.inputButton_H) + "px"
+      undoDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction + (dimensions.inputButton_W)) / 2) + 'px';
+      undoDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputButton_y) + "px";
 
 
+      
+      dimensions.inputResultSize = dimensions.canvas_width * settings.inputResult_size;
+      oneResultDiv.style.width = Math.floor(dimensions.inputResultSize) + "px"
+      oneResultDiv.style.height = Math.floor(dimensions.inputResultSize) + "px"
+      oneResultDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - 3 * (dimensions.inputResultSize)) / 2) + 'px';
+      oneResultDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputResult_y) + "px";
+
+
+      
+      ifResultDiv.style.width = Math.floor(dimensions.inputResultSize) + "px"
+      ifResultDiv.style.height = Math.floor(dimensions.inputResultSize) + "px"
+      ifResultDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction + (dimensions.inputResultSize)) / 2) + 'px';
+      ifResultDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputResult_y) + "px";
     
+    
+    } else {
+      // allowInput = false
+
+      
+      inputDiv.style.width = '0px';
+      inputDiv.style.height = '0px';
+
+
+      dimensions.inputButton_W = 0;
+      dimensions.inputButton_H = 0;
+      clearDiv.style.width = Math.floor(dimensions.inputButton_W) + "px"
+      clearDiv.style.height = Math.floor(dimensions.inputButton_H) + "px"
+      undoDiv.style.width = Math.floor(dimensions.inputButton_W) + "px"
+      undoDiv.style.height = Math.floor(dimensions.inputButton_H) + "px"
+
+      dimensions.inputResultSize = 0;
+      oneResultDiv.style.width = Math.floor(dimensions.inputResultSize) + "px"
+      oneResultDiv.style.height = Math.floor(dimensions.inputResultSize) + "px"
+      ifResultDiv.style.width = Math.floor(dimensions.inputResultSize) + "px"
+      ifResultDiv.style.height = Math.floor(dimensions.inputResultSize) + "px"
+
+    }
 }
 
 
