@@ -1339,13 +1339,13 @@ function adjustOverlay() {
       clearDiv.style.height = Math.floor(dimensions.inputButton_H) + "px"
       clearDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - 3 * (dimensions.inputButton_W)) / 2) + 'px';
       clearDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputButton_y) + "px";
-
+      clearDiv.style.lineHeight = Math.floor(dimensions.inputButton_H) + "px";
       
       undoDiv.style.width = Math.floor(dimensions.inputButton_W) + "px"
       undoDiv.style.height = Math.floor(dimensions.inputButton_H) + "px"
       undoDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction + (dimensions.inputButton_W)) / 2) + 'px';
       undoDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputButton_y) + "px";
-
+      undoDiv.style.lineHeight = Math.floor(dimensions.inputButton_H) + "px";
 
       
       dimensions.inputResultSize = dimensions.canvas_width * settings.inputResult_size;
@@ -1353,14 +1353,14 @@ function adjustOverlay() {
       oneResultDiv.style.height = Math.floor(dimensions.inputResultSize) + "px"
       oneResultDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - 3 * (dimensions.inputResultSize)) / 2) + 'px';
       oneResultDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputResult_y) + "px";
-
+      oneResultDiv.style.lineHeight = Math.floor(dimensions.inputResultSize) + "px";
 
       
       ifResultDiv.style.width = Math.floor(dimensions.inputResultSize) + "px"
       ifResultDiv.style.height = Math.floor(dimensions.inputResultSize) + "px"
       ifResultDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction + (dimensions.inputResultSize)) / 2) + 'px';
       ifResultDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputResult_y) + "px";
-    
+      ifResultDiv.style.lineHeight = Math.floor(dimensions.inputResultSize) + "px";
     
     } else {
       // allowInput = false
@@ -1373,17 +1373,20 @@ function adjustOverlay() {
 
       dimensions.inputButton_W = 0;
       dimensions.inputButton_H = 0;
-      clearDiv.style.width = Math.floor(dimensions.inputButton_W) + "px"
-      clearDiv.style.height = Math.floor(dimensions.inputButton_H) + "px"
-      undoDiv.style.width = Math.floor(dimensions.inputButton_W) + "px"
-      undoDiv.style.height = Math.floor(dimensions.inputButton_H) + "px"
+      clearDiv.style.width = Math.floor(dimensions.inputButton_W) + "px";
+      clearDiv.style.height = Math.floor(dimensions.inputButton_H) + "px";
+      clearDiv.style.lineHeight = Math.floor(dimensions.inputButton_H) + "px";
+      undoDiv.style.width = Math.floor(dimensions.inputButton_W) + "px";
+      undoDiv.style.height = Math.floor(dimensions.inputButton_H) + "px";
+      undoDiv.style.lineHeight = Math.floor(dimensions.inputButton_H) + "px";
 
       dimensions.inputResultSize = 0;
-      oneResultDiv.style.width = Math.floor(dimensions.inputResultSize) + "px"
-      oneResultDiv.style.height = Math.floor(dimensions.inputResultSize) + "px"
-      ifResultDiv.style.width = Math.floor(dimensions.inputResultSize) + "px"
-      ifResultDiv.style.height = Math.floor(dimensions.inputResultSize) + "px"
-
+      oneResultDiv.style.width = Math.floor(dimensions.inputResultSize) + "px";
+      oneResultDiv.style.height = Math.floor(dimensions.inputResultSize) + "px";
+      oneResultDiv.style.lineHeight = Math.floor(dimensions.inputResultSize) + "px";
+      ifResultDiv.style.width = Math.floor(dimensions.inputResultSize) + "px";
+      ifResultDiv.style.height = Math.floor(dimensions.inputResultSize) + "px";
+      ifResultDiv.style.lineHeight = Math.floor(dimensions.inputResultSize) + "px";
     }
 }
 
