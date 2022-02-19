@@ -55,6 +55,7 @@
 // GLOBAL ------------------------------------------------
 
 var onHomeScreen = false;
+var allowInput = false;
 
 var game;
 var timeCounter = 0;
@@ -94,7 +95,10 @@ var dimensions = {
     canvas_width: window.innerWidth * settings.canvas_w_percent, 
     canvas_height: window.innerWidth * settings.canvas_w_percent * settings.canvas_h_w_ratio,
     overlaySize: 0, // set by getOverlaySize function
-    inputOverlaySize: 250 //  can't adust?
+    inputOverlaySize: 250, //  can't adust?
+    inputButton_W: 50,
+    inputButton_H: 20,
+    inputResultSize: 50,
 }
 
 
@@ -448,6 +452,22 @@ function overlayCharacterQuiz(char, writerNum) {
 
 
 
+turnOnInput() {
+  allowInput = true;
+  $(".hideable").removeClass("hidden");
+
+}
+
+
+turnOffInput() {
+  allowInput = true;
+  $(".hideable").addClass("hidden");
+}
+
+
+
+
+
 // CLASSES ------------------------------
 
 class Game {
@@ -507,6 +527,7 @@ class Game {
         this.level = new Level(this, levelPlans[this.levelNumber]);
         this.level.buildSessions(this.level.plan);
         this.level.getSession();
+        turnOnInput();  // move to fighting session only
     }
   
     drawText(text, x, y, alignment, fontString) {
@@ -520,6 +541,8 @@ class Game {
     animate() {
         game.level.drawOpeningText();
     }
+
+    
 
     /*
     handleInput(inputCode) {
@@ -1255,17 +1278,14 @@ function adjustOverlay() {
             }
             
         }
-
-
-
-
-
     
     } else {
         console.log("ERROR: ONLY SET UP FOR 1 or 3 WRITERS")
     }
     
-    // input overlay div
+
+
+    // input overlay divs
     let inputDiv = document.getElementById("input-overlay");
 
     let y_offset = 0;
@@ -1278,8 +1298,25 @@ function adjustOverlay() {
     inputDiv.style.top = Math.floor((window.innerHeight - dimensions.inputOverlaySize) / 2 + y_offset) + "px";
 
 
+    let clearDiv = document.getElementById("cmdClear");
+    clearDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - (dimensions.inputButton_W)) / 2) + 'px';
+    clearDiv.style.top = Math.floor((window.innerHeight - dimensions.inputButton_H) / 2 + y_offset) + "px";
 
-    
+    let undoDiv = document.getElementById("cmdUndo");
+    undoDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - (dimensions.inputButton_W)) / 2) + 'px';
+    undoDiv.style.top = Math.floor((window.innerHeight - dimensions.inputButton_H) / 2 + y_offset) + "px";
+
+
+    let oneResultDiv = document.getElementById("oneResult");
+    oneResultDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - (dimensions.inputResultSize)) / 2) + 'px';
+    oneResultDiv.style.top = Math.floor((window.innerHeight - dimensions.inputResultSize) / 2 + y_offset) + "px";
+
+
+    let ifResultDiv = document.getElementById("ifResult");
+    ifResultDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - (dimensions.inputResultSize)) / 2) + 'px';
+    ifResultDiv.style.top = Math.floor((window.innerHeight - dimensions.inputResultSize) / 2 + y_offset) + "px";
+
+
     
 }
 

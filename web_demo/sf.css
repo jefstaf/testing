@@ -89,7 +89,7 @@ img {
     bottom: 0;
     right: 0;
     left: 0;
-    
+
 }
 
 #oneResult { 
@@ -108,6 +108,34 @@ img {
 .drawingBoard { width: 250px; height: 250px; cursor: crosshair; overflow: hidden; border: 15px dotted rgb(93, 223, 34); border-radius: 90px; }/* clear: both; *background-color: #fafafa; }*/
 .drawingBoard span { display: none; }
 .drawingBoard.loading span { display: inline; color: #606060; }
+
+.drawingBoard.hidden {
+    width: 10px;
+    height: 10px;
+    cursor: default;
+    overflow: hidden;
+    border: 0px solid black;
+}
+
+.cmd.hidden {
+    width: 10px;
+    height: 10px;
+    cursor: default;
+    overflow: hidden;
+    border: 0px solid black;
+}
+
+.results.hidden {
+    width: 10px;
+    height: 10px;
+    cursor: default;
+    overflow: hidden;
+    border: 0px solid black;
+}
+
+
+
+
 /*.commands { width: 250px; margin-top: 3px; }*/
 .cmd { width: 122px; background-color: #fce7c0; text-align: center; cursor: default; padding: 3px; color: #606060; border-radius: 30px;}
 /*.cmd.cmdUndo { float: right; }*/
