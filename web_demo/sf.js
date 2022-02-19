@@ -295,7 +295,8 @@ const levelBackgrounds = [
 
 const levelPlans = [                     // ***** //
     'train:stroke_h:2, train:char_one:2',
-    //'fight:goomba:3',
+    'fight:goomba:3',
+    'build:char_two',
     'train:char_two:2, train:char_three:2',
     'train:stroke_s:3, train:char_ten:3',
     'train:char_dry:3',
@@ -530,7 +531,7 @@ class Game {
         this.level = new Level(this, levelPlans[this.levelNumber]);
         this.level.buildSessions(this.level.plan);
         this.level.getSession();
-        turnOnInput();  // move to fighting session only
+        
     }
   
     drawText(text, x, y, alignment, fontString) {
@@ -689,10 +690,16 @@ class Level {
         console.log("\nCurrent Session:", this.game.currentSession);
         if (this.game.currentSession instanceof FightingSession) {
             settings.writerCount = 1;
+            turnOnInput();  
             spawnEnemies();
-        } else {
+        } else if (this.game.currentSession instanceof TrainingSession) {
             // training session
             settings.writerCount = 3;
+            turnOffInput(); 
+        } else {
+            // build
+            settings.writerCount = 3;
+            turnOffInput(); 
         }
     }
 
@@ -912,13 +919,18 @@ class Level {
 
         let goalType = goal[0].trim();
         let target = goal[1].trim();
-        let repsRequired = parseInt(goal[2]);
+        let repsRequired = 1;
+        if (goal[2]) {
+          repsRequired = parseInt(goal[2]);
+        }
         let newSession;
 
         if (goalType == "train") {
            newSession = new TrainingSession(target, repsRequired);
         } else if (goalType == "fight") {
-           newSession = new FightingSession();
+           newSession = new FightingSession(target, repsRequired);
+        } else if (goalType == "build") {
+           newSession = new BuildingSession(target);
         } else {
           console.log('ERROR: GOAL TYPE UNDEFINED');
         }
@@ -927,6 +939,23 @@ class Level {
       }
     }
 
+}
+
+class FightingSession {
+  constructor(target) {
+    //this.currentSequence = "";
+  }
+
+  resetProgress() {
+    //this.currentSequence = "";
+      
+  }
+}
+
+class BuildingSession {
+  constructor(target) {
+
+  }
 }
 
 class TrainingSession {
@@ -1054,16 +1083,7 @@ class TrainingSession {
 }
 
 
-class FightingSession {
-  constructor() {
-    this.currentSequence = "";
-  }
 
-  resetProgress() {
-      this.currentSequence = "";
-      
-  }
-}
 
 
 class Stroke {
@@ -1289,33 +1309,42 @@ function adjustOverlay() {
 
 
     // input overlay divs
-    let inputDiv = document.getElementById("input-overlay");
-
-    let y_offset = 0;
-            
+    let y_offset = 0;    
     if (onHomeScreen) {
       y_offset -=  touchArea.height / 2;
     }
 
+    let inputDiv = document.getElementById("input-overlay");
     inputDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - (dimensions.inputOverlaySize)) / 2) + 'px';
     inputDiv.style.top = Math.floor((window.innerHeight - dimensions.inputOverlaySize) / 2 + y_offset) + "px";
 
 
     let clearDiv = document.getElementById("cmdClear");
+    dimensions.inputButton_W = dimensions.canvas_width * .15;
+    dimensions.inputButton_H = dimensions.canvas_height * .10;
+    clearDiv.style.width = Math.floor(dimensions.inputButton_W) + "px"
+    clearDiv.style.height = Math.floor(dimensions.inputButton_H) + "px"
     clearDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - 3 * (dimensions.inputButton_W)) / 2) + 'px';
     clearDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputButton_y) + "px";
 
     let undoDiv = document.getElementById("cmdUndo");
+    clearDiv.style.width = Math.floor(dimensions.inputButton_W) + "px"
+    clearDiv.style.height = Math.floor(dimensions.inputButton_H) + "px"
     undoDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction + (dimensions.inputButton_W)) / 2) + 'px';
     undoDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputButton_y) + "px";
 
 
     let oneResultDiv = document.getElementById("oneResult");
+    dimensions.inputResultSize = dimensions.canvas_width * .10;
+    oneResultDiv.style.width = Math.floor(dimensions.inputResultSize) + "px"
+    oneResultDiv.style.height = Math.floor(dimensions.inputResultSize) + "px"
     oneResultDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - 3 * (dimensions.inputResultSize)) / 2) + 'px';
     oneResultDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputResult_y) + "px";
 
 
     let ifResultDiv = document.getElementById("ifResult");
+    oneResultDiv.style.width = Math.floor(dimensions.inputResultSize) + "px"
+    oneResultDiv.style.height = Math.floor(dimensions.inputResultSize) + "px"
     ifResultDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction + (dimensions.inputResultSize)) / 2) + 'px';
     ifResultDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputResult_y) + "px";
 
