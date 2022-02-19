@@ -82,11 +82,14 @@ var settings = {
 
     topText_y: 0.15,
     infoText_y: 0.25,
-    instructions_y: 0.85,
+    instructions_y: 0.80,
 
     titleText1_y: 0.33,
     titleText2_y: 0.65,
-    touchAreaHeight: 0.80,
+    touchAreaHeight: 0.75,
+
+    inputButton_y: 0.85,
+    inputResult_y: 0.90,
 
     fullScreenControl_size: 0.05
 };
@@ -98,7 +101,7 @@ var dimensions = {
     inputOverlaySize: 250, //  can't adust?
     inputButton_W: 50,
     inputButton_H: 20,
-    inputResultSize: 50,
+    inputResultSize: 50
 }
 
 
@@ -1299,22 +1302,22 @@ function adjustOverlay() {
 
 
     let clearDiv = document.getElementById("cmdClear");
-    clearDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - (dimensions.inputButton_W)) / 2) + 'px';
-    clearDiv.style.top = Math.floor((window.innerHeight - dimensions.inputButton_H) / 2 + y_offset) + "px";
+    clearDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - 3 * (dimensions.inputButton_W)) / 2) + 'px';
+    undoDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputButton_y) + "px";
 
     let undoDiv = document.getElementById("cmdUndo");
-    undoDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - (dimensions.inputButton_W)) / 2) + 'px';
-    undoDiv.style.top = Math.floor((window.innerHeight - dimensions.inputButton_H) / 2 + y_offset) + "px";
+    undoDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction + (dimensions.inputButton_W)) / 2) + 'px';
+    undoDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputButton_y) + "px";
 
 
     let oneResultDiv = document.getElementById("oneResult");
-    oneResultDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - (dimensions.inputResultSize)) / 2) + 'px';
-    oneResultDiv.style.top = Math.floor((window.innerHeight - dimensions.inputResultSize) / 2 + y_offset) + "px";
+    oneResultDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - 3 * (dimensions.inputResultSize)) / 2) + 'px';
+    oneResultDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputResult_y) + "px";
 
 
     let ifResultDiv = document.getElementById("ifResult");
-    ifResultDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - (dimensions.inputResultSize)) / 2) + 'px';
-    ifResultDiv.style.top = Math.floor((window.innerHeight - dimensions.inputResultSize) / 2 + y_offset) + "px";
+    ifResultDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction + (dimensions.inputResultSize)) / 2) + 'px';
+    ifResultDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputResult_y) + "px";
 
 
     
