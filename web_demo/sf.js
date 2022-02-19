@@ -176,6 +176,7 @@ var strokes = [];
 var fonts = {}; // added by updateFontSizes function
 var canvas;
 var context;
+var allowableChars = ['二', '十', '我'];
 
 
 const backgroundSources = [
@@ -308,6 +309,7 @@ function getRandomFromArray(array) {
 // LEVEL DATA (levelData) ------------------------------------------- 
 
 const levelBackgrounds = [
+  ['blue_purple_paper', 'full_screen_chop'],
   ['pink_blob', 'full_screen_chop', 'bamboo_brown'],
   ['blue_purple_paper', 'full_screen_chop'],  
   ['pale_yellow', 'full_screen_chop', 'bamboo_green'],
@@ -322,8 +324,9 @@ const levelBackgrounds = [
 ];
 
 const levelPlans = [                     // ***** //
-    'train:stroke_h:2, train:char_one:2',
     'fight:goomba:3',
+    'train:stroke_h:2',
+    'train:char_one:2',
     'build:char_two',
     'train:char_two:2, train:char_three:2',
     'train:stroke_s:3, train:char_ten:3',
@@ -909,7 +912,7 @@ class Level {
         } else if (session instanceof FightingSession) {
             // fighting session - not yet built
             text = "Fight!"
-            y = dimensions.canvas_height * settings.titleText1_y;
+            y = dimensions.canvas_height * (settings.topText_y * 2);
             fontString = fonts['titleSmall'];
         } else {
             // neither training nor fighting?
