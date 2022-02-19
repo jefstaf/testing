@@ -80,7 +80,7 @@ var settings = {
 
     targetLanguage: 'zh_CN',
 
-    topText_y: 0.15,
+    topText_y: 0.10,
     infoText_y: 0.25,
     instructions_y: 0.80,
 
@@ -331,23 +331,42 @@ const levelPlans = [                     // ***** //
 // HANZI WRITER ------------------------------------------
 
 var writer1 = HanziWriter.create('overlay-div-1', '一', {
-  width: 150,
-  height: 150,
-  showCharacter: false,
-  padding: 5
+  width: dimensions.overlaySize,
+  height: dimensions.overlaySize,
+  padding: 5,
+  strokeColor: '#000',
+  //radicalColor: '#337ab7',
+  showOutline: false,
+  outlineColor: '#dcdcaa',
+  drawingColor: '#a503fc', // strokes drawn by user during quizzing
+  drawingWidth: 15,  // stroke width drawn by user during quizzing, in px
+  showCharacter: true,
+  showHintAfterMisses: 1,  // set to false to disable
+  highlightOnComplete: true,
+  highlightColor: '#aaf',
+
+  strokeAnimationSpeed: 2,
+  strokeHighlightSpeed: 2,
+  strokeFadeDuration: 400,
+  delayBetweenStrokes: 100,
+  delayBetweenLoops: 2000
 });
 
 
 var writer2 = HanziWriter.create('overlay-div-2', '二', {
-  width: 150,
-  height: 150,
-  showCharacter: false,
+  width: dimensions.overlaySize,
+  height: dimensions.overlaySize,
   padding: 5,
-
-  outlineColor: '#eee',
+  strokeColor: '#000',
+  //radicalColor: '#337ab7',
+  showOutline: false,
+  outlineColor: '#dcdcaa',
   drawingColor: '#a503fc', // strokes drawn by user during quizzing
   drawingWidth: 25,  // stroke width drawn by user during quizzing, in px
-  strokeColor: '#000',
+  showCharacter: true,
+  showHintAfterMisses: 1,  // set to false to disable
+  highlightOnComplete: true,
+  highlightColor: '#aaf',
 
   strokeAnimationSpeed: 2,
   strokeHighlightSpeed: 2,
@@ -366,7 +385,7 @@ var writer3 = HanziWriter.create('overlay-div-3', '三', {
   showOutline: false,
   outlineColor: '#dcdcaa',
   drawingColor: '#a503fc', // strokes drawn by user during quizzing
-  drawingWidth: 15,  // stroke width drawn by user during quizzing, in px
+  drawingWidth: 25,  // stroke width drawn by user during quizzing, in px
   showCharacter: true,
   showHintAfterMisses: 1,  // set to false to disable
   highlightOnComplete: true,
@@ -484,13 +503,16 @@ function overlayCharacterQuiz(char, writerNum) {
 function turnOnInput() {
   allowInput = true;
   $(".hideable").removeClass("hidden");
-
+  if (game) {game.needsResized = true;}
+  //setCanvasSize();
 }
 
 
 function turnOffInput() {
   allowInput = false;
   $(".hideable").addClass("hidden");
+  if (game) {game.needsResized = true;}
+  //setCanvasSize();
 }
 
 
@@ -704,6 +726,7 @@ class Level {
         this.plan = plan;
         this.sessions = [];
         this.currentSessionNumber = 0;
+        //emptyWriters();
         
         //if (this.number != 0) { this.drawBG() }; 
         
