@@ -88,7 +88,10 @@ var settings = {
     titleText2_y: 0.65,
     touchAreaHeight: 0.75,
 
+    inputButton_height: 0.05,
+    inputButton_width: 0.10,
     inputButton_y: 0.85,
+    inputResult_size: 0.05,
     inputResult_y: 0.90,
 
     fullScreenControl_size: 0.05
@@ -691,7 +694,7 @@ class Level {
         if (this.game.currentSession instanceof FightingSession) {
             settings.writerCount = 1;
             turnOnInput();  
-            spawnEnemies();
+            this.spawnEnemies();
         } else if (this.game.currentSession instanceof TrainingSession) {
             // training session
             settings.writerCount = 3;
@@ -1320,22 +1323,22 @@ function adjustOverlay() {
 
 
     let clearDiv = document.getElementById("cmdClear");
-    dimensions.inputButton_W = dimensions.canvas_width * .15;
-    dimensions.inputButton_H = dimensions.canvas_height * .10;
+    dimensions.inputButton_W = dimensions.canvas_width * settings.inputButton_height;
+    dimensions.inputButton_H = dimensions.canvas_height * settings.inputButton_width;
     clearDiv.style.width = Math.floor(dimensions.inputButton_W) + "px"
     clearDiv.style.height = Math.floor(dimensions.inputButton_H) + "px"
     clearDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - 3 * (dimensions.inputButton_W)) / 2) + 'px';
     clearDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputButton_y) + "px";
 
     let undoDiv = document.getElementById("cmdUndo");
-    clearDiv.style.width = Math.floor(dimensions.inputButton_W) + "px"
-    clearDiv.style.height = Math.floor(dimensions.inputButton_H) + "px"
+    undoDiv.style.width = Math.floor(dimensions.inputButton_W) + "px"
+    undoDiv.style.height = Math.floor(dimensions.inputButton_H) + "px"
     undoDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction + (dimensions.inputButton_W)) / 2) + 'px';
     undoDiv.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * settings.inputButton_y) + "px";
 
 
     let oneResultDiv = document.getElementById("oneResult");
-    dimensions.inputResultSize = dimensions.canvas_width * .10;
+    dimensions.inputResultSize = dimensions.canvas_width * settings.inputResult_size;
     oneResultDiv.style.width = Math.floor(dimensions.inputResultSize) + "px"
     oneResultDiv.style.height = Math.floor(dimensions.inputResultSize) + "px"
     oneResultDiv.style.left = Math.round((window.innerWidth * settings.canvas_w_correction - 3 * (dimensions.inputResultSize)) / 2) + 'px';
