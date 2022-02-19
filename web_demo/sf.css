@@ -18,10 +18,7 @@ body {
 
 .overlay2 {
     position: absolute;
-    /*margin: 0 auto;*/
     z-index: 10;
-    /*border: 5px solid rgb(41, 18, 2);*/
-    /*margin-left: 200px;*/
 }
 
 #input-overlay {
@@ -43,29 +40,8 @@ img {
 }
 
 
-/*
-.cmdUndo {
-    left: 100px;
-}
-
-
-#allResults {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100px;
-    height: 50px;
-    background-color: rgb(202, 223, 15);
-    position: relative;
-    text-align: center;
-}
-*/
 
 .results {
-    /*font-size: xx-large;*/
-    /*border-radius: 30px;*/
-    /*width: 50px;
-    height: 50px;*/
     text-align: center;
     position: absolute;
 }

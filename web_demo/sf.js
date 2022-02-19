@@ -331,19 +331,15 @@ const levelPlans = [                     // ***** //
 // HANZI WRITER ------------------------------------------
 
 var writer1 = HanziWriter.create('overlay-div-1', '一', {
-  width: dimensions.overlaySize,
-  height: dimensions.overlaySize,
+  width: 150,
+  height: 150,
+  showCharacter: false,
   padding: 5,
-  strokeColor: '#000',
-  //radicalColor: '#337ab7',
-  showOutline: false,
-  outlineColor: '#dcdcaa',
+
+  outlineColor: '#eee',
   drawingColor: '#a503fc', // strokes drawn by user during quizzing
-  drawingWidth: 15,  // stroke width drawn by user during quizzing, in px
-  showCharacter: true,
-  showHintAfterMisses: 1,  // set to false to disable
-  highlightOnComplete: true,
-  highlightColor: '#aaf',
+  drawingWidth: 25,  // stroke width drawn by user during quizzing, in px
+  strokeColor: '#000',
 
   strokeAnimationSpeed: 2,
   strokeHighlightSpeed: 2,
@@ -354,19 +350,15 @@ var writer1 = HanziWriter.create('overlay-div-1', '一', {
 
 
 var writer2 = HanziWriter.create('overlay-div-2', '二', {
-  width: dimensions.overlaySize,
-  height: dimensions.overlaySize,
+  width: 150,
+  height: 150,
+  showCharacter: false,
   padding: 5,
-  strokeColor: '#000',
-  //radicalColor: '#337ab7',
-  showOutline: false,
-  outlineColor: '#dcdcaa',
+
+  outlineColor: '#eee',
   drawingColor: '#a503fc', // strokes drawn by user during quizzing
   drawingWidth: 25,  // stroke width drawn by user during quizzing, in px
-  showCharacter: true,
-  showHintAfterMisses: 1,  // set to false to disable
-  highlightOnComplete: true,
-  highlightColor: '#aaf',
+  strokeColor: '#000',
 
   strokeAnimationSpeed: 2,
   strokeHighlightSpeed: 2,
@@ -377,19 +369,15 @@ var writer2 = HanziWriter.create('overlay-div-2', '二', {
 //writer2.hideCharacter();
 
 var writer3 = HanziWriter.create('overlay-div-3', '三', {
-  width: dimensions.overlaySize,
-  height: dimensions.overlaySize,
+  width: 150,
+  height: 150,
+  showCharacter: false,
   padding: 5,
-  strokeColor: '#000',
-  //radicalColor: '#337ab7',
-  showOutline: false,
-  outlineColor: '#dcdcaa',
+
+  outlineColor: '#eee',
   drawingColor: '#a503fc', // strokes drawn by user during quizzing
   drawingWidth: 25,  // stroke width drawn by user during quizzing, in px
-  showCharacter: true,
-  showHintAfterMisses: 1,  // set to false to disable
-  highlightOnComplete: true,
-  highlightColor: '#aaf',
+  strokeColor: '#000',
 
   strokeAnimationSpeed: 2,
   strokeHighlightSpeed: 2,
@@ -733,12 +721,12 @@ class Level {
     }
 
     getSession() {
+        emptyWriters();
         this.game.currentSession = this.sessions[this.currentSessionNumber];
         this.game.currentSession.resetProgress();
         console.log("\nCurrent Session:", this.game.currentSession);
         if (this.game.currentSession instanceof FightingSession) {
             settings.writerCount = 1;
-            emptyWriters();
             turnOnInput();  
             this.spawnEnemies();
         } else if (this.game.currentSession instanceof TrainingSession) {
@@ -748,7 +736,6 @@ class Level {
         } else {
             // build
             settings.writerCount = 3;
-            emptyWriters();
             turnOffInput(); 
         }
     }
