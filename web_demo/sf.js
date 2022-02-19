@@ -1093,6 +1093,11 @@ class BuildingSession {
   constructor(target) {
 
   }
+
+  resetProgress() {
+
+    
+  }
 }
 
 class TrainingSession {

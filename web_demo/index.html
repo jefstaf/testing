@@ -97,7 +97,7 @@
                 //*****************
         
                 if (matches[0]) {
-                  $("#oneResultP").text(matches[0].hanzi);
+                  $("#oneResult").text(matches[0].hanzi);
                   let filteredResults = "";
                   for (var i = 0; i != matches.length; ++i) {
                     if (allowableChars.includes(matches[i].hanzi)) {
@@ -106,7 +106,7 @@
                     
                   }
         
-                  $("#ifResultP").text(filteredResults);
+                  $("#ifResult").text(filteredResults);
                 }
         
               }
