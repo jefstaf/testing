@@ -1330,6 +1330,7 @@ function adjustOverlay() {
       inputDiv.style.top = Math.floor((window.innerHeight - dimensions.inputOverlaySize) / 2 + y_offset) + "px";
       inputDiv.style.width = dimensions.inputOverlaySize + 'px';
       inputDiv.style.height = dimensions.inputOverlaySize + 'px';
+      inputDiv.style.border = "10px dotted black";
 
       
       dimensions.inputButton_W = dimensions.canvas_width * settings.inputButton_height;
@@ -1367,6 +1368,7 @@ function adjustOverlay() {
       
       inputDiv.style.width = '0px';
       inputDiv.style.height = '0px';
+      inputDiv.style.border = "0px dotted black";
 
 
       dimensions.inputButton_W = 0;
