@@ -616,6 +616,18 @@ class Sprite {
 
 }
 
+class Player extends Sprite {
+  constructor(x, y, spriteSheet) {
+    super(x, y, spriteSheet)
+  }
+
+}
+
+class Enemy extends Sprite {
+  constructor() {
+    super(x, y, spriteSheet)
+  }
+}
 
 
 
