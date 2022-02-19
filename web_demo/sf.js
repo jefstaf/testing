@@ -55,7 +55,7 @@
 // GLOBAL ------------------------------------------------
 
 var onHomeScreen = false;
-var allowInput = false; // change to false after bug fixing
+var allowInput = true; // change to false after bug fixing
 
 var game;
 var timeCounter = 0;
@@ -505,9 +505,107 @@ function turnOffInput() {
 
 
 
+// SPRITES ------------------------------------------
 
 
-// CLASSES ------------------------------
+class Sprite {
+    constructor(x, y, spriteSheet) {
+        this.x = x;
+        this.y = y;                     
+        this.speedX = 0;     
+        this.speedY = 0;
+        this.imageInfo = { sheet : spriteSheet,
+                            sheetVerticalOffset : 0,
+                            sheetHorizontalOffset : 0,
+                            imgQty : 1,
+                            width : 0,
+                            height : 0, 
+                            leftBuffer : 0,
+                            rightBuffer : 0,
+                            topBuffer : 0,
+                            bottomBuffer : 0,
+                            animationRate : GLOBAL_ANIMATION_RATE
+                          }; 
+
+        this.calculateSides();
+        
+        this.currentImageIndex = 0;
+        this.animationRate = this.imageInfo.animationRate;
+        this.animationCounter = 0;
+    }
+
+    calculateSides() {
+        this.height = this.imageInfo.height;
+        this.width = this.imageInfo.width;
+
+        this.left = this.x;
+        this.right = this.x + this.width;
+        this.top = this.y;
+        this.bottom = this.y + this.height;
+        this.centerX = this.x + (this.width / 2);
+
+        this.leftBuffer = this.imageInfo.leftBuffer;
+        this.rightBuffer = this.imageInfo.rightBuffer;
+        this.topBuffer = this.imageInfo.topBuffer;
+        this.bottomBuffer = this.imageInfo.bottomBuffer; 
+
+        this.visualLeft = this.left + this.leftBuffer;
+        this.visualRight = this.right - this.rightBuffer;
+        this.visualTop = this.top + this.topBuffer;
+        this.visualBottom = this.bottom - this.bottomBuffer;
+  }
+
+    newPos() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+    } 
+
+    animate() {
+        var current = this.currentImageIndex;
+        var imgQty = this.imageInfo.imgQty;
+
+        var cutWidth;
+        if (this.imageInfo.reverse) {
+            cutWidth = - this.imageInfo.width;
+        } else {
+            cutWidth = this.imageInfo.width;
+        }
+
+        if (imgQty > 1) {
+            if (this.animationCounter < this.animationRate) { 
+                this.animationCounter++;
+            } else {
+                if (current + 1 < imgQty) {
+                    this.currentImageIndex += 1;
+                } else {
+                    this.currentImageIndex = 0;
+                }
+                this.animationCounter = 0;
+            }
+        }
+
+
+        var sheet = this.imageInfo.sheet;
+        var sourceX = this.imageInfo.sheetHorizontalOffset + 
+                        (cutWidth * this.currentImageIndex);
+        var sourceY = this.imageInfo.sheetVerticalOffset;
+
+        this.draw(sheet, sourceX, sourceY);
+
+    }
+
+    draw(sheet, sourceX, sourceY) {
+        game.ctx.drawImage(sheet, sourceX, sourceY, this.width, this.height,
+                        this.x, this.y, this.width, this.height); 
+    }
+
+}
+
+
+
+
+
+// LEVELS AND SESSIONS ------------------------------
 
 class Game {
     constructor() { 
@@ -686,12 +784,14 @@ class Game {
         }
     }
 
+    /*
     handleFightingInput(inputCode) {
       let session = game.currentSession;
       
       // only need to check LEARNED/AVAILABLE chars
       
     }
+    */
 
     passLevel() {
         console.log("\nYou passed Level " + this.level.number + "\n");
@@ -726,7 +826,7 @@ class Level {
         this.game.currentSession.resetProgress();
         console.log("\nCurrent Session:", this.game.currentSession);
         if (this.game.currentSession instanceof FightingSession) {
-            settings.writerCount = 1;
+            settings.writerCount = 3;
             turnOnInput();  
             this.spawnEnemies();
         } else if (this.game.currentSession instanceof TrainingSession) {
