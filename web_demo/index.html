@@ -76,6 +76,9 @@
                 });
                 $("#ifResult").click(function (evt) {
                   attack(evt);
+                  _drawingBoard.clearCanvas();
+                  _drawingBoard.redraw();
+                  lookup();
                 });
               }
         
