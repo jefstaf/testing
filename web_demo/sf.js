@@ -389,10 +389,16 @@ function attack(e) { // receives event from clicking ifResult box
   let targetedEnemy = null;
   let damagePoints;
 
+  e = "十" // TESTING for development only
+  
   if (isNaN(e)) {
     // normal
-    let word = dictionary.find(w => w.charS === e);
-    let attack = attacks.find(a => a.id === word.id);
+    console.log("e:", e);
+    let word = dictionary.find(w => w.charS == e);
+    console.log("word:", word);
+    let attack = attacks.find(a => a.id == word.id);
+    console.log("attack:", attack);
+    console.log("damage:", attack.damage);
     if (attack && attack.damage) {
       damagePoints = attack.damage;
     } else {
