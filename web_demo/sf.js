@@ -344,8 +344,12 @@ const levelPlans = [                     // ***** //
 
 function attack(e) {
   console.log(e);
-  let char = $("ifResult").text;
+  let char = $("#ifResult").text();
   console.log(char);
+
+  $("#ifResult").text = "";
+  $("#oneResult").text = "";
+
 
 }
 
@@ -553,8 +557,8 @@ class Sprite {
         this.y = y; // center
         this.relativeX = this.x / dimensions.canvas_width;
         this.relativeY = this.y / dimensions.canvas_height;           
-        this.speedX = 0;     
-        this.speedY = 0;
+        //this.speedX = 0;     
+        //this.speedY = 0;
         this.imageInfo = { sheet : null,
                             sheetVerticalOffset : 0,
                             sheetHorizontalOffset : 0,
