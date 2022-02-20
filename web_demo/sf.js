@@ -786,6 +786,8 @@ class LivingBeing extends Sprite {
 class Player extends LivingBeing {
   constructor(x, y) {
     super(x, y);
+    this.maxHealth = 100;
+    this.currentHealth = this.maxHealth;
   }
 
 }
@@ -1400,7 +1402,7 @@ class FightingSession {
 
   }
 
-  spawnEnemies() { // goomba
+  spawnEnemies() { 
     for (let i = 0; i < this.baddies.length; i++) {
       let guy = this.baddies[i];
       let x = randomInt(dimensions.canvas_width*.70, dimensions.canvas_width*.90);
@@ -1413,13 +1415,17 @@ class FightingSession {
       }
     }
 
-    
-
     //console.log("Enemies:", this.enemies.length);
   }
 
+  spawnPlayer() {
+    let x = dimensions.canvas_width * 0.15;
+    let y = dimensions.canvas_height * 0.50;
+    game.player = new Player(x, y);
+  }
 
-  drawEnemyHealth() { // need to move hard-coded numbers to variables
+
+  drawEnemyHealth() { // need to change to use settings
     
     let cw = dimensions.canvas_width;
     let ch = dimensions.canvas_height;
@@ -1451,13 +1457,38 @@ class FightingSession {
     
     // draw current health meter
     y_reduction = h * (1 - percentHealthRemaining);
-    context.fillStyle = '#e3111170';
+    context.fillStyle = '#e31111';
     context.fillRect(x, y + y_reduction, w, h - y_reduction);
 
   }
 
   drawPlayerHealth() {
+    let cw = dimensions.canvas_width;
+    let ch = dimensions.canvas_height;
+    let totalMaxHealth = 0;
+    let totalCurrentHealth = 0;
+    let percentHealthRemaining = 1.00;
+    let y_reduction = 0;
+    let x = cw * 0.02;
+    let y = ch * 0.25;
+    let w = cw * 0.04;
+    let h = ch * 0.50;
 
+    // draw max health meter
+    context.fillStyle = "white";
+    context.fillRect(x, y, w, h);
+
+    // get max health number
+    totalMaxHealth = game.player.maxHealth;
+
+    // calculate current health ratio
+    totalCurrentHealth = game.player.currentHealth;
+    percentHealthRemaining = totalCurrentHealth / totalMaxHealth;
+    
+    // draw current health meter
+    y_reduction = h * (1 - percentHealthRemaining);
+    context.fillStyle = 'green';
+    context.fillRect(x, y + y_reduction, w, h - y_reduction);
   }
 
 
@@ -1473,6 +1504,7 @@ class FightingSession {
   }
 
   begin() {
+    this.spawnPlayer();
     this.spawnEnemies();
   }
 }
