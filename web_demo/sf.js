@@ -55,10 +55,22 @@
 
 // GLOBAL ------------------------------------------------
 
+var game;
+
 var onHomeScreen = false;
 var allowInput = false; 
+var loadedEnoughToStart = false; // change later\
+var requiredBaddiesToStart = 2;
+var requiredBGToStart = 4;
+var checkIfLoadedEnoughArray = [0, 0]; // [bg, baddies]
+function checkIfLoadedEnough() {
+  if (checkIfLoadedEnoughArray.includes(0)) {
+    loadedEnoughToStart = true;
+    adjustHomeScreenSize();
+  }
+}
 
-var game;
+
 var timeCounter = 0;
 const GLOBAL_ANIMATION_RATE = 5;
 
@@ -88,7 +100,7 @@ var settings = {
 
     titleText1_y: 0.30,
     titleText2_y: 0.65,
-    touchAreaHeight: 0.75,
+    touchToStartAreaHeight: 0.75,
 
     inputOverlayBorderRadius: .25,
 
@@ -195,8 +207,8 @@ const backgroundSources = [
 ];
 
 const baddies = [
-  {id: 'ninja.black-red', type: 'ninja', colors: 'black-red', url: 'sprites/Ninja-black-red-50-idle.png', spriteSheet: null},
-  {id: 'ninja.purple-pink-blue', type: 'ninja', colors: 'purple-pink-blue', url: 'sprites/Ninja-purple-pink-blue.png', spriteSheet: null}
+  {id: 'ninja.black-red', type: 'ninja', colors: 'black-red', url: 'sprites/Ninja-black-red-50-idle.png', maxHealth: 10, spriteSheet: null},
+  {id: 'ninja.purple-pink-blue', type: 'ninja', colors: 'purple-pink-blue', url: 'sprites/Ninja-purple-pink-blue.png', maxHealth: 10, spriteSheet: null}
 ];
 
 
@@ -537,16 +549,20 @@ function turnOffInput() {
 function loadBaddies() {
     
   for (let i = 0; i < baddies.length; i++) {
-      console.log("Loading baddie " + i + "...");
+      //console.log("Loading baddie " + i + "...");
       let img = new Image();
 
       img.addEventListener('load', function() {
           baddies[i].spriteSheet = img;
-          console.log("Loaded baddie " + i + ": " + baddies[i].id);
+          console.log("Loaded baddie " + parseInt(i+1) + " of " + baddies.length + ": " + baddies[i].id);
+          if(i == requiredBaddiesToStart - 1) { // only works if first baddies in baddies are listed in order
+            checkIfLoadedEnoughArray[1] = 1;
+            checkIfLoadedEnough();
+          }
       });
 
       document.appendChild.img;
-      console.log(baddies[i].url)
+      //console.log(baddies[i].url)
       img.src = baddies[i].url;
   }       
 }
@@ -667,29 +683,44 @@ class Sprite {
 
 }
 
-class Player extends Sprite {
+class LivingBeing extends Sprite {
   constructor(x, y) {
-    super(x, y)
+    super(x, y);
+  }
+
+  getHit(damagePoints) {
+    this.currentHealth -= damagePoints;
+    if (this.currentHealth <= 0) {
+      this.die();
+    }
+  }
+
+  die() {
+    console.log("Died");
+  }
+}
+
+class Player extends LivingBeing {
+  constructor(x, y) {
+    super(x, y);
   }
 
 }
 
-class Enemy extends Sprite {
-  constructor(x, y) {
+class Enemy extends LivingBeing {
+  constructor(x, y, enemiesIndex) {
     super(x, y);
+    this.enemiesIndex = enemiesIndex;
   }
 }
 
 
 class Ninja extends Enemy {
-  constructor(colors, x, y) {
-    super(x, y);
+  constructor(colors, x, y, enemiesIndex) {
+    super(x, y, enemiesIndex);
     this.imgID = 'ninja.' + colors;
-    console.log("imgID:", this.imgID);
     let baddie = baddies.find(guy => guy.id === this.imgID);
-    console.log("Baddie:", baddie);
     let sheet = baddie.spriteSheet;
-    console.log("Sheet:", sheet);
     this.imageInfo = { sheet : sheet,
       sheetVerticalOffset : 0,
       sheetHorizontalOffset : 15200,
@@ -703,11 +734,16 @@ class Ninja extends Enemy {
       animationRate : GLOBAL_ANIMATION_RATE / (Math.random()*6+.01),
       reverse: true
     };
-    this.action = "idling"; 
+    this.action = "idling"; // not yet in use
     this.desiredScreenProportion = .75; // includes whitespace on all sides
     this.scale = this.getScale(this.desiredScreenProportion);
     this.currentImageIndex = randomInt(0,this.imgQty);
+
+    this.maxHealth = baddie.maxHealth;
+    this.currentHealth = this.maxHealth;
   }
+
+
 
 
 }
@@ -804,13 +840,13 @@ class Game {
 
     
 
-    /*
+    // for development only
     handleInput(inputCode) {
       console.log("Handling input: " + inputCode);
       let session = game.currentSession;
       
       if (session instanceof TrainingSession) {
-        this.handleTrainingInput(inputCode);
+        //this.handleTrainingInput(inputCode);
         
       } else if (session instanceof FightingSession) {
         // fighting session - not yet built
@@ -818,11 +854,11 @@ class Game {
         
       } else {
         // neither training nor fighting?
-        console.log("NO SESSION FOUND");
+        //console.log("NO SESSION FOUND");
       }
     }
     
-
+  /*
     handleTrainingInput(inputCode) {
         let session = game.currentSession;
         let targets = session.getTargetStrokesArray();
@@ -907,14 +943,14 @@ class Game {
         }
     }
 
-    /*
+    
     handleFightingInput(inputCode) {
       let session = game.currentSession;
       
-      // only need to check LEARNED/AVAILABLE chars
+      console.log("inputCode:", inputCode);
       
     }
-    */
+    
 
     passLevel() {
         console.log("\nYou passed Level " + this.level.number + "\n");
@@ -1520,7 +1556,7 @@ function adjustOverlay() {
             let yOffset = 0;
             
             if (onHomeScreen) {
-              yOffset -=  touchArea.height / 2;
+              yOffset -=  touchToStartArea.height / 2;
             }
     
             if (settings.portrait_mode) {
@@ -1557,7 +1593,7 @@ function adjustOverlay() {
             let yOffset = 0;
             
             if (onHomeScreen) {
-              yOffset -= touchArea.height / 2;
+              yOffset -= touchToStartArea.height / 2;
             }
 
     
@@ -1633,7 +1669,7 @@ function adjustOverlay() {
     if (allowInput) {
       let y_offset = 0;    
       if (onHomeScreen) {
-        y_offset -=  touchArea.height / 2;
+        y_offset -=  touchToStartArea.height / 2;
       }
       let x_margin = (window.innerWidth * settings.canvas_w_correction - dimensions.canvas_width) / 2;
 
@@ -1868,25 +1904,25 @@ function createEventListeners() {
     addListener(document, "keydown", handleKeyDown);
     addListener(canvas, "click", function(evt) {
         var mousePos = getMousePos(evt);
-        console.log(mousePos.x, mousePos.y);
+        console.log("Click at", mousePos.x, mousePos.y);
     
-        if (isInside(mousePos, touchArea)) {
-            clickedInArea();
+        if (loadedEnoughToStart && isInside(mousePos, touchToStartArea)) {
+            clickedInTouchToStartArea();
         }else{
             //console.log('Clicked outside the touch area');
         } 
 
         if (isInside(mousePos, fullScreenControl)) {
-          console.log("Clicked in Full Screen Control Area");
-          if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen();
-          } else {
-            if (document.exitFullscreen) {
-              document.exitFullscreen();
+            //console.log("Clicked in Full Screen Control Area");
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                  document.exitFullscreen();
+                }
             }
-          }
         } else {
-          console.log('Clicked outside the Full Screen Control area');
+           //console.log('Clicked outside the Full Screen Control area');
         }
     });
 
@@ -1916,19 +1952,19 @@ function isInside(pos, rect){
     return pos.x > rect.x && pos.x < rect.x+rect.width && pos.y < rect.y+rect.height && pos.y > rect.y
 }
 
-function clickedInArea() {
-    console.log("Clicked inside the area.")
+function clickedInTouchToStartArea() {
+    //console.log("Clicked inside the area.")
     if (onHomeScreen) {
         onHomeScreen = false;
         launchGame();
     }
 }
 
-var touchArea = {
+var touchToStartArea = {
     x: 0,
-    y: dimensions.canvas_height * (1 - settings.touchAreaHeight),
+    y: dimensions.canvas_height * (1 - settings.touchToStartAreaHeight),
     width: dimensions.canvas_width,
-    height: dimensions.canvas_height * settings.touchAreaHeight
+    height: dimensions.canvas_height * settings.touchToStartAreaHeight
 };
 
 var fullScreenControl = {
@@ -1939,10 +1975,10 @@ var fullScreenControl = {
 };
 
 function setTouchAreaSize() {
-    touchArea.x = 0,
-    touchArea.y = dimensions.canvas_height * 0.80,
-    touchArea.width = dimensions.canvas_width,
-    touchArea.height = dimensions.canvas_height * 0.20
+    touchToStartArea.x = 0,
+    touchToStartArea.y = dimensions.canvas_height * 0.80,
+    touchToStartArea.width = dimensions.canvas_width,
+    touchToStartArea.height = dimensions.canvas_height * 0.20
 }
 
 // HOME SCREEN  ----------------------
@@ -2009,12 +2045,18 @@ function drawTitleText() {
 }
 
 function drawTouchToStartBanner() {
-    context.fillStyle = settings.touch_area_color;
-    context.fillRect(touchArea.x, touchArea.y, touchArea.width, touchArea.height);
 
-    var clickText = "Touch here to start";
-    var clickTextX = touchArea.x + (touchArea.width * 0.50);
-    var clickTextY = touchArea.y + (touchArea.height * 0.50);
+    context.fillStyle = settings.touch_area_color;
+    context.fillRect(touchToStartArea.x, touchToStartArea.y, touchToStartArea.width, touchToStartArea.height);
+
+    var clickText;
+    if (loadedEnoughToStart) {
+      clickText = "Touch here to start";
+    } else {
+      clickText = "Loading..."
+    } 
+    var clickTextX = touchToStartArea.x + (touchToStartArea.width * 0.50);
+    var clickTextY = touchToStartArea.y + (touchToStartArea.height * 0.50);
     context.fillStyle = settings.home_screen_bg_color;
     context.textAlign = "center";
     context.textBaseline = "middle";
@@ -2053,10 +2095,15 @@ function loadBackgrounds() {
         img.addEventListener('load', function() {
             backgroundSources[i].img = img;
             
-            //console.log("Loaded background image " + i + ": " + backgroundSources[i].id);
+            console.log("Loaded background image " + parseInt(i+1) + " of " + backgroundSources.length + ": " + backgroundSources[i].id);
     
             if (i == 0 && onHomeScreen) {     // full_screen_chop, used on home screen
                 launchHomeScreen();
+            }
+
+            if(i == requiredBGToStart - 1) { // only works if first BG in Sources are listed in order
+              checkIfLoadedEnoughArray[0] = 1;
+              checkIfLoadedEnough();
             }
 
         });
