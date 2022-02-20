@@ -631,8 +631,12 @@ class Sprite {
     }
 
     draw(sheet, sourceX, sourceY) {
+        context.fillStyle = "pink";
+        console.log(this.x, this.y, this.width, this.height);
+        context.fillRect(this.x, this.y, this.width, this.height);
         context.drawImage(sheet, sourceX, sourceY, this.width, this.height,
                         this.x, this.y, this.width, this.height); 
+        //context.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
     }
 
 }
