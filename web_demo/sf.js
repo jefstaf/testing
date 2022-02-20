@@ -391,8 +391,14 @@ function attack(e) { // receives event from clicking ifResult box
 
   if (isNaN(e)) {
     // normal
-    let attack = attacks.find(a => a.id === id);
-    damagePoints = attack.damage;
+    let word = dictionary.find(w => w.charS === e);
+    let attack = attacks.find(a => a.id === word.id);
+    if (attack && attack.damage) {
+      damagePoints = attack.damage;
+    } else {
+      console.log("ERROR! Attack from allowed characters, no damage data")
+    }
+    
   } else {
     // for development only
     damagePoints = e;
