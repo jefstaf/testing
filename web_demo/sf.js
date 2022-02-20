@@ -564,15 +564,15 @@ class Sprite {
                           }; 
 
         this.calculateSides();
-        
+        this.scale = 1.0;
         this.currentImageIndex = 0;
         this.animationRate = this.imageInfo.animationRate;
         this.animationCounter = 0;
     }
 
     calculateSides() {
-        this.height = this.imageInfo.height;
-        this.width = this.imageInfo.width;
+        this.height = this.imageInfo.height * this.scale;
+        this.width = this.imageInfo.width * this.scale;
 
         this.left = this.x;
         this.right = this.x + this.width;
@@ -580,10 +580,10 @@ class Sprite {
         this.bottom = this.y + this.height;
         this.centerX = this.x + (this.width / 2);
 
-        this.leftBuffer = this.imageInfo.leftBuffer;
-        this.rightBuffer = this.imageInfo.rightBuffer;
-        this.topBuffer = this.imageInfo.topBuffer;
-        this.bottomBuffer = this.imageInfo.bottomBuffer; 
+        this.leftBuffer = this.imageInfo.leftBuffer * this.scale;
+        this.rightBuffer = this.imageInfo.rightBuffer * this.scale;
+        this.topBuffer = this.imageInfo.topBuffer * this.scale;
+        this.bottomBuffer = this.imageInfo.bottomBuffer * this.scale; 
 
         this.visualLeft = this.left + this.leftBuffer;
         this.visualRight = this.right - this.rightBuffer;
@@ -632,9 +632,9 @@ class Sprite {
 
     draw(sheet, sourceX, sourceY) {
         context.fillStyle = "pink";
-        console.log(this.x, this.y, this.width, this.height);
-        context.fillRect(this.x, this.y, this.width, this.height);
-        context.drawImage(sheet, sourceX, sourceY, this.width, this.height,
+        console.log(sheet, sourceX, sourceY, this.imageInfo.width, this.imageInfo.height);
+        context.fillRect(this.x, this.y, this.imageInfo.width, this.imageInfo.height);
+        context.drawImage(sheet, sourceX, sourceY, this.imageInfo.width, this.imageInfo.height,
                         this.x, this.y, this.width, this.height); 
         //context.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
     }
@@ -666,7 +666,7 @@ class Ninja extends Enemy {
     console.log("Sheet:", sheet);
     this.imageInfo = { sheet : sheet,
       sheetVerticalOffset : 0,
-      sheetHorizontalOffset : 0,
+      sheetHorizontalOffset : 30400,
       imgQty : 20,
       width : 1600,
       height : 1600, 
@@ -678,6 +678,7 @@ class Ninja extends Enemy {
       reverse: true
     };
     this.action = "idling"; 
+    this.scale = 0.25;
   }
 }
 
@@ -1205,8 +1206,8 @@ class FightingSession {
   spawnEnemies() { // goomba
     for (let i = 0; i < this.baddies.length; i++) {
       let guy = this.baddies[i];
-      let x = 400;
-      let y = 400;
+      let x = 200;
+      let y = 200;
 
       if (guy.type == 'ninja') {
         this.enemies.push(new Ninja(guy.colors, x, y));
