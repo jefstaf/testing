@@ -221,8 +221,8 @@ const backgroundSources = [
 ];
 
 const baddies = [
-  {id: 'ninja.black-red', type: 'ninja', colors: 'black-red', url: 'sprites/Ninja-black-red-50-idle.png', maxHealth: 10, spriteSheet: null},
-  {id: 'ninja.purple-pink-blue', type: 'ninja', colors: 'purple-pink-blue', url: 'sprites/Ninja-purple-pink-blue.png', maxHealth: 10, spriteSheet: null}
+  {id: 'ninja.black-red', type: 'ninja', colors: 'black-red', url: 'sprites/Ninja-black-red-50-twoActions.png', maxHealth: 10, spriteSheet: null},
+  {id: 'ninja.purple-pink-blue', type: 'ninja', colors: 'purple-pink-blue', url: 'sprites/Ninja-purple-pink-blue.png', maxHealth: 20, spriteSheet: null}
 ];
 
 
@@ -898,6 +898,12 @@ class Game {
         this.level.getSession();
         
     }
+
+    spawnPlayer() {
+      let x = dimensions.canvas_width * 0.15;
+      let y = dimensions.canvas_height * 0.50;
+      this.player = new Player(x, y);
+    }
   
     drawText(text, x, y, alignment, fontString) {
         context.textAlign = alignment;
@@ -1087,6 +1093,7 @@ class Level {
         if (this.game.currentSession instanceof FightingSession) {
             settings.writerCount = 3;
             turnOnInput();  
+            this.game.spawnPlayer();
         } else if (this.game.currentSession instanceof TrainingSession) {
             // training session
             settings.writerCount = 3;
@@ -1418,11 +1425,7 @@ class FightingSession {
     //console.log("Enemies:", this.enemies.length);
   }
 
-  spawnPlayer() {
-    let x = dimensions.canvas_width * 0.15;
-    let y = dimensions.canvas_height * 0.50;
-    game.player = new Player(x, y);
-  }
+
 
 
   drawEnemyHealth() { // need to change to use settings
@@ -1504,7 +1507,6 @@ class FightingSession {
   }
 
   begin() {
-    this.spawnPlayer();
     this.spawnEnemies();
   }
 }
@@ -2150,7 +2152,7 @@ function handleKeyDown(e) {
 
   
   //if (game && game.wantsNextStroke) {
-    game.handleInput(e.key);        
+    //game.handleInput(e.key);        
   //}
   
 
