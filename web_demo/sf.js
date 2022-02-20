@@ -347,8 +347,8 @@ function attack(e) {
   let char = $("#ifResult").text();
   console.log(char);
 
-  $("#ifResult").text = "";
-  $("#oneResult").text = "";
+  $("#ifResult").text("");
+  $("#oneResult").text("");
 
 
 }
