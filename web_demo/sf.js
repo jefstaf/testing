@@ -9,8 +9,7 @@
   IN-GAME HOME BOARD, CHOOSE TO TRAIN, FIGHT, OR BUILD
 
 - onscreen meters:
-    - health
-    - points
+    - player health
     - qi level
     - skills/weapons? (equip water, fire, etc.?)
     - max stroke number
@@ -378,10 +377,9 @@ const levelPlans = [                     // ***** //
 // HANZI LOOKUP INPUT -----------------------------------
 
 function attack(e) { // receives event from clicking ifResult box
-
-  //console.log(e);
+  console.log("e:", e);
   let char = $("#ifResult").text();
-  //console.log(char);
+  console.log("char:", char);
   $("#ifResult").text("");
   $("#oneResult").text("");
 
@@ -393,8 +391,7 @@ function attack(e) { // receives event from clicking ifResult box
   
   if (isNaN(e)) {
     // normal
-    console.log("e:", e);
-    let word = dictionary.find(w => w.charS == e);
+    let word = dictionary.find(w => w.charS == char);
     console.log("word:", word);
     let attack = attacks.find(a => a.id == word.id);
     console.log("attack:", attack);
@@ -1120,10 +1117,7 @@ class Level {
             if (!dataObj.img) {
                 console.log('Image not loaded yet: ' + dataObj.id);
             } else {
-                //let imgID = dataObj.url;
-                //let rotateYN= dataObj.rotateOnPortrait;
-                //console.log("Data Obj: ", dataObj);
-                drawScaledBackground(dataObj);//src, rotateYN);
+                drawScaledBackground(dataObj);
             }
         }
 
@@ -1143,11 +1137,6 @@ class Level {
         let text = "";
         let fontString = fonts['topText'];
         let y = dimensions.canvas_height * settings.topText_y;
-        /*
-            let qi = getCharAndPronunciation("qi");
-            text = "Your " + qi + " is at Level " + this.number + ".";
-        */
-        
         
         if (session instanceof TrainingSession) {
             text = "Training"
@@ -1385,11 +1374,8 @@ class FightingSession {
     //console.log("Enemies:", this.enemies.length);
   }
 
-  drawPlayerHealth() {
 
-  }
-
-  drawEnemyHealth() {
+  drawEnemyHealth() { // need to move hard-coded numbers to variables
     
     let cw = dimensions.canvas_width;
     let ch = dimensions.canvas_height;
@@ -1424,16 +1410,43 @@ class FightingSession {
     context.fillStyle = '#e3111170';
     context.fillRect(x, y + y_reduction, w, h - y_reduction);
 
+  }
+
+  drawPlayerHealth() {
+
+  }
 
 
+  drawQiWidget() {
+    let qi = getCharAndPronunciation("qi");
+    text = qi + " Level:\n" + this.number;
+    let x = dimensions.canvas_width * 0.05;
+    let y = dimensions.canvas_height * 0.20;
+    let bgcolor = '#16009680';
+    let textcolor = 'black';
+
+    this.drawWidget(x, y, text, bgcolor, textcolor);
   }
 
 //**************//
 
+  drawWidget(x, y, text, bgcolor, textcolor) {
+    /*
+    context.beginPath();
+    // (centerX, centerY, radius, startingAngle, endingAngle)
+    context.arc(100, 75, 50, 0, 2 * Math.PI); 
+    //context.strokeStyle = bgcolor;
+    //context.stroke(); 
+    context.fillStyle = bgcolor;
+    context.fill();
+    */
+
+  }
+
   drawWidgets() {
     this.drawPlayerHealth();
     this.drawEnemyHealth();
-    //this.level.drawQiWidget();
+    this.level.drawQiWidget();
   }
 
   resetProgress() {
