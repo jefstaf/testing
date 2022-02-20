@@ -60,7 +60,7 @@ var allowInput = false;
 
 var game;
 var timeCounter = 0;
-const GLOBAL_ANIMATION_RATE = 1;
+const GLOBAL_ANIMATION_RATE = 5;
 
 var settings = {
     portrait_mode: false,
@@ -195,10 +195,14 @@ const backgroundSources = [
 ];
 
 const baddies = [
-  {id: 'ninja.black-red', type: 'ninja', colors: 'black-red', url: 'sprites/Ninja-black-red.png', spriteSheet: null},
+  {id: 'ninja.black-red', type: 'ninja', colors: 'black-red', url: 'sprites/Ninja-black-red-50-idle.png', spriteSheet: null},
   {id: 'ninja.purple-pink-blue', type: 'ninja', colors: 'purple-pink-blue', url: 'sprites/Ninja-purple-pink-blue.png', spriteSheet: null}
 ];
 
+
+function randomInt(min, max) { 
+  return Math.floor(Math.random() * (Math.ceil(max) - Math.floor(min) + 1) + Math.floor(min))
+}
 
 function getOverlaySizes() {
     dimensions.overlaySize = Math.min(dimensions.canvas_height, dimensions.canvas_width * settings.writerSize);
@@ -545,8 +549,10 @@ function loadBaddies() {
 
 class Sprite {
     constructor(x, y) {
-        this.x = x;
-        this.y = y;                     
+        this.x = x; // center
+        this.y = y; // center
+        this.relativeX = this.x / dimensions.canvas_width;
+        this.relativeY = this.y / dimensions.canvas_height;           
         this.speedX = 0;     
         this.speedY = 0;
         this.imageInfo = { sheet : null,
@@ -574,11 +580,10 @@ class Sprite {
         this.height = this.imageInfo.height * this.scale;
         this.width = this.imageInfo.width * this.scale;
 
-        this.left = this.x;
-        this.right = this.x + this.width;
-        this.top = this.y;
-        this.bottom = this.y + this.height;
-        this.centerX = this.x + (this.width / 2);
+        this.left = this.x - this.width/2;
+        this.right = this.x + this.width/2;
+        this.top = this.y - this.width/2;
+        this.bottom = this.y + this.height/2;
 
         this.leftBuffer = this.imageInfo.leftBuffer * this.scale;
         this.rightBuffer = this.imageInfo.rightBuffer * this.scale;
@@ -591,9 +596,23 @@ class Sprite {
         this.visualBottom = this.bottom - this.bottomBuffer;
     }
 
+    getScale(desiredScreenProportion) {
+      let minDimension = Math.min(dimensions.canvas_height, dimensions.canvas_width);
+      //let desiredScreenProportion = .75; // includes whitespace on all sides
+  
+      // scale to multiply original image by when drawing
+      let scale = (minDimension * desiredScreenProportion) / this.imageInfo.height
+      this.scale = scale;
+      return scale;
+    }
+
     newPos() {
-        this.x += this.speedX;
-        this.y += this.speedY;
+        this.x = this.relativeX * dimensions.canvas_width;
+        this.y = this.relativeY * dimensions.canvas_height; 
+
+        
+        //this.x += this.speedX;
+        //this.y += this.speedY;
     } 
 
     animate() {
@@ -632,13 +651,13 @@ class Sprite {
 
     draw(sheet, sourceX, sourceY) {
         context.fillStyle = "pink";
-        if (sourceX < 0 || sourceY > (1600*20)) {
-          alert("Outside the sprite sheet");
+        if (sourceX < 0 || sourceX > this.imageInfo.sheetHorizontalOffset + this.imageInfo.imgQty * this.imageInfo.width) {
+          console.log("Attempted to load image outside the sprite sheet");
         }
-        console.log(sheet, sourceX, sourceY, this.imageInfo.width, this.imageInfo.height);
-        context.fillRect(this.x, this.y, this.width, this.height);
+        //console.log(sheet, sourceX, sourceY, this.imageInfo.width, this.imageInfo.height);
+        //context.fillRect(this.x, this.y, this.width, this.height);
         context.drawImage(sheet, sourceX, sourceY, this.imageInfo.width, this.imageInfo.height,
-                        this.x, this.y, this.width, this.height); 
+                        this.left, this.top, this.width, this.height); 
         //context.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
     }
 
@@ -668,21 +687,25 @@ class Ninja extends Enemy {
     let sheet = baddie.spriteSheet;
     console.log("Sheet:", sheet);
     this.imageInfo = { sheet : sheet,
-      sheetVerticalOffset : 4800,
-      sheetHorizontalOffset : 30400,
+      sheetVerticalOffset : 0,
+      sheetHorizontalOffset : 15200,
       imgQty : 20,
-      width : 1600,
-      height : 1600, 
-      leftBuffer : 400,
-      rightBuffer : 600,
-      topBuffer : 400,
-      bottomBuffer : 200,
-      animationRate : GLOBAL_ANIMATION_RATE,
+      width : 800,
+      height : 800, 
+      leftBuffer : 200,
+      rightBuffer : 300,
+      topBuffer : 200,
+      bottomBuffer : 100,
+      animationRate : GLOBAL_ANIMATION_RATE / (Math.random()*6+.01),
       reverse: true
     };
     this.action = "idling"; 
-    this.scale = 0.25;
+    this.desiredScreenProportion = .75; // includes whitespace on all sides
+    this.scale = this.getScale(this.desiredScreenProportion);
+    this.currentImageIndex = randomInt(0,this.imgQty);
   }
+
+
 }
 
 
@@ -766,6 +789,7 @@ class Game {
         if (session instanceof FightingSession) {
           for (let j = 0; j < session.enemies.length; j++) {
             let e = session.enemies[j];
+            e.getScale(e.desiredScreenProportion);
             e.newPos();
             e.calculateSides();
             e.animate();
@@ -1209,8 +1233,8 @@ class FightingSession {
   spawnEnemies() { // goomba
     for (let i = 0; i < this.baddies.length; i++) {
       let guy = this.baddies[i];
-      let x = 200;
-      let y = 200;
+      let x = randomInt(dimensions.canvas_width*.70, dimensions.canvas_width*.90);
+      let y = randomInt(dimensions.canvas_height*.30, dimensions.canvas_height*.70);
 
       if (guy.type == 'ninja') {
         this.enemies.push(new Ninja(guy.colors, x, y));
@@ -1219,7 +1243,7 @@ class FightingSession {
       }
     }
 
-
+    //console.log("Enemies:", this.enemies.length);
   }
 
   resetProgress() {
