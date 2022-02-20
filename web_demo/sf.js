@@ -168,7 +168,19 @@ const dictionary = [
   {id: "qi", en: "qi", charS: "气", charT: "氣", pronM: "qì"}, 
   {id: "horizontal_stroke", en: "horizontal stroke", charS: "横", charT: "横", pronM: "héng"}
   
+];
+
+
+const attacks = [
+  {id: "one", damage: 1},
+  {id: "two", damage: 2},
+  {id: "three", damage: 3},
+  {id: "ten", damage: 10},
+  {id: "dry", damage: 10},
+  {id: "king", damage: 10},
+  {id: "han_chinese", damage: 10}
 ]
+
 
 
 const goodJobMessages = [
@@ -176,7 +188,7 @@ const goodJobMessages = [
   'Great!',
   'Good job!',
   'That\'s it!'
-]
+];
 
 const strokeData = [
   { id: 'h', form: '一' , nameEnglish: 'horizontal stroke', namePinyin: 'héng', trainingText: 'Swipe horizontally, from left to right' }, 
@@ -188,8 +200,11 @@ var strokes = [];
 var fonts = {}; // added by updateFontSizes function
 var canvas;
 var context;
-var allowableChars = ['二', '十', '我'];
+// available attacks
+var allowableAttacks = ['one', 'two', 'three', 'ten', 'han_chinese']; // ids - make so it's added by training/building
+var allowableChars = []; // characters added by updateAllowableChars() after training/building
 
+// add function to make sure all chars in dict have a matching attack?
 
 const backgroundSources = [
   { id: 'full_screen_chop', url: 'images/full_screen_chop.png', rotateOnPortrait: false, align: 'top_left', ratio: settings.fullScreenControl_size, img: null},
@@ -216,6 +231,10 @@ function randomInt(min, max) {
   return Math.floor(Math.random() * (Math.ceil(max) - Math.floor(min) + 1) + Math.floor(min))
 }
 
+function getRandomFromArray(array) {
+  return array[Math.floor(Math.random() * array.length)];
+}
+
 function getOverlaySizes() {
     dimensions.overlaySize = Math.min(dimensions.canvas_height, dimensions.canvas_width * settings.writerSize);
     dimensions.inputButton_W = dimensions.canvas_width * settings.inputButton_width;
@@ -235,11 +254,9 @@ function updateFontSizes() {
 
     fonts.cmdClear = Math.floor(dimensions.inputButton_H) * 0.70 + "px sans-serif";
     fonts.cmdUndo = Math.floor(dimensions.inputButton_H) * 0.60 + "px sans-serif";
-    fonts.oneResult = Math.floor(dimensions.oneResultSize * (1-settings.oneResultTextPadding)) + "px STXingKai";
+    fonts.oneResult = Math.floor(dimensions.oneResultSize * (1-settings.oneResultTextPadding)) + "px serif";
     fonts.ifResult = Math.floor(dimensions.ifResultSize) + "px STXingKai";
 }
-
-
 
 function getChar(id) {
   let wordObj = dictionary.find(word => word.id === id);
@@ -320,8 +337,14 @@ function getStrokes(id) {
 }
 
 
-function getRandomFromArray(array) {
-  return array[Math.floor(Math.random() * array.length)];
+function updateAllowableChars() { // change to only add new ones
+  allowableChars = [];
+  for (let i = 0; i < allowableAttacks.length; i++) {
+    let attackID = allowableAttacks[i];
+    let word = dictionary.find( entry => entry.id === attackID);
+    allowableChars.push(word.charS);
+  }
+  console.log("allowableChars:", allowableChars);
 }
 
 
@@ -354,13 +377,43 @@ const levelPlans = [                     // ***** //
 
 // HANZI LOOKUP INPUT -----------------------------------
 
-function attack(e) {
-  console.log(e);
-  let char = $("#ifResult").text();
-  console.log(char);
+function attack(e) { // receives event from clicking ifResult box
 
+  //console.log(e);
+  let char = $("#ifResult").text();
+  //console.log(char);
   $("#ifResult").text("");
   $("#oneResult").text("");
+
+  let session = game.currentSession;
+  let targetedEnemy = null;
+  let damagePoints;
+
+  if (isNaN(e)) {
+    // normal
+    let attack = attacks.find(a => a.id === id);
+    damagePoints = attack.damage;
+  } else {
+    // for development only
+    damagePoints = e;
+  }
+                   
+
+  for (let i = 0; i < session.enemies.length; i++) {
+    let guy = session.enemies[i];
+    console.log(guy.currentHealth);
+    if(guy.currentHealth > 0) {
+      targetedEnemy = guy;
+      break;
+    }
+    
+  }
+  
+  if (!targetedEnemy) {
+    console.log("All enemies at ZERO")
+  } else {
+    targetedEnemy.getHit(damagePoints);
+  }
 
 
 }
@@ -824,17 +877,26 @@ class Game {
   
     animate() {
         game.level.drawOpeningText();
-        let session = game.currentSession;
 
+        let session = game.currentSession;
         if (session instanceof FightingSession) {
+
+          // draw enemies
           for (let j = 0; j < session.enemies.length; j++) {
             let e = session.enemies[j];
-            e.getScale(e.desiredScreenProportion);
-            e.newPos();
-            e.calculateSides();
-            e.animate();
+            if (e.currentHealth > 0) {
+              e.getScale(e.desiredScreenProportion);
+              e.newPos();
+              e.calculateSides();
+              e.animate();
+            }
+            
           }
+
+
         }
+
+        session.drawWidgets();
       
     }
 
@@ -842,7 +904,7 @@ class Game {
 
     // for development only
     handleInput(inputCode) {
-      console.log("Handling input: " + inputCode);
+      //console.log("Handling input: " + inputCode);
       let session = game.currentSession;
       
       if (session instanceof TrainingSession) {
@@ -945,9 +1007,12 @@ class Game {
 
     
     handleFightingInput(inputCode) {
-      let session = game.currentSession;
-      
       console.log("inputCode:", inputCode);
+
+      attack(2);
+
+
+      
       
     }
     
@@ -1249,7 +1314,6 @@ class FightingSession {
     this.enemyData;
     this.baddies = [];  // data objects from 'baddies'
     this.enemies = [];    
-    this.enemiesAlive;
     this.decomposeTarget();
 
   }
@@ -1277,13 +1341,66 @@ class FightingSession {
       let y = randomInt(dimensions.canvas_height*.30, dimensions.canvas_height*.70);
 
       if (guy.type == 'ninja') {
-        this.enemies.push(new Ninja(guy.colors, x, y));
+        this.enemies.push(new Ninja(guy.colors, x, y, i));
       } else {
         // undefined bad guy type
       }
     }
 
+    
+
     //console.log("Enemies:", this.enemies.length);
+  }
+
+  drawPlayerHealth() {
+
+  }
+
+  drawEnemyHealth() {
+    
+    let cw = dimensions.canvas_width;
+    let ch = dimensions.canvas_height;
+    let totalMaxHealth = 0;
+    let totalCurrentHealth = 0;
+    let percentHealthRemaining = 1.00;
+    let y_reduction = 0;
+    let x = cw * 0.94;
+    let y = ch * 0.25;
+    let w = cw * 0.04;
+    let h = ch * 0.50;
+
+    // draw max health meter
+    context.fillStyle = "black";
+    context.fillRect(x, y, w, h);
+
+    // calculate total max health number
+    for (let i = 0; i < this.baddies.length; i++) {
+      let guy = this.baddies[i];
+      totalMaxHealth += guy.maxHealth;
+    }
+
+    // calculate total current health ratio
+    for (let j = 0; j < this.enemies.length; j++) {
+      let guy = this.enemies[j];
+      totalCurrentHealth += guy.currentHealth;
+    }
+    percentHealthRemaining = totalCurrentHealth / totalMaxHealth;
+    
+    // draw current health meter
+    y_reduction = h * (1 - percentHealthRemaining);
+    context.fillStyle = '#e3111170';
+    context.fillRect(x, y + y_reduction, w, h - y_reduction);
+
+
+
+  }
+
+//**************//
+
+  drawWidgets() {
+    this.drawPlayerHealth();
+    this.drawEnemyHealth();
+    //this.level.drawQiWidget();
   }
 
   resetProgress() {
@@ -1302,7 +1419,9 @@ class BuildingSession {
   }
 
   resetProgress() {
+  }
 
+  drawWidgets() {
 
   }
 }
@@ -1427,7 +1546,9 @@ class TrainingSession {
       overlayCharacterQuiz(this.quizTargetFull, 2);
   }
 
-  
+  drawWidgets() {
+
+  }
 }
 
 
@@ -1931,11 +2052,11 @@ function createEventListeners() {
 function handleKeyDown(e) {
   //console.log("Pressed: Key: " + e.key + " Code: " + e.code);
 
-  /*
-  if (game && game.wantsNextStroke) {
-    game.handleInput(e.key);        // later, convert raw code to custom stroke id code
-  }
-  */
+  
+  //if (game && game.wantsNextStroke) {
+    game.handleInput(e.key);        
+  //}
+  
 
 }
 
@@ -2199,6 +2320,7 @@ function start() {
     createEventListeners();
     loadBackgrounds();
     loadBaddies();
+    updateAllowableChars(); // can move/remove later
     launchHomeScreen();
 
 }
