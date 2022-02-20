@@ -6,6 +6,7 @@
 - opening screen
   choose target language
   start game, save game, etc.
+  IN-GAME HOME BOARD, CHOOSE TO TRAIN, FIGHT, OR BUILD
 
 - onscreen meters:
     - health
