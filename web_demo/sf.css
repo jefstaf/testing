@@ -79,7 +79,7 @@ img {
 
 
 
-.cmd:hover, #ifResult:hover { 
+.cmd:active, #ifResult:active { 
     background-color: #e31111; 
     color: #fff;
 }
