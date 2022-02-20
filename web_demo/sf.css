@@ -16,6 +16,11 @@ body {
     /*border: 5px solid saddlebrown;*/
 }
 
+.overlayMid {
+    position: absolute;
+    z-index: 7;
+}
+
 .overlay2 {
     position: absolute;
     z-index: 10;
@@ -40,8 +45,7 @@ img {
 }
 
 
-
-.results {
+.results, .widget {
     text-align: center;
     position: absolute;
 }
@@ -66,8 +70,6 @@ img {
     border: 3px solid black;
 }
 
-
-
 .cmd, #ifResult { 
     width: 122px; 
     background-color: #e3111170; 
@@ -76,8 +78,6 @@ img {
     padding: 0px; 
     color: white;
 }
-
-
 
 .cmd:active, #ifResult:active { 
     background-color: #e31111; 

@@ -251,8 +251,8 @@ function updateFontSizes() {
     fonts.infoText = Math.floor(dimensions.canvas_width * 0.03) + "px Mali";
     fonts.instructions = Math.floor(dimensions.canvas_width * 0.03) + "px Mali";
 
-    fonts.cmdClear = Math.floor(dimensions.inputButton_H) * 0.70 + "px sans-serif";
-    fonts.cmdUndo = Math.floor(dimensions.inputButton_H) * 0.60 + "px sans-serif";
+    fonts.cmdClear = Math.floor(dimensions.inputButton_H * 0.70) + "px sans-serif";
+    fonts.cmdUndo = Math.floor(dimensions.inputButton_H * 0.60) + "px sans-serif";
     fonts.oneResult = Math.floor(dimensions.oneResultSize * (1-settings.oneResultTextPadding)) + "px serif";
     fonts.ifResult = Math.floor(dimensions.ifResultSize) + "px STXingKai";
 }
@@ -926,7 +926,10 @@ class Game {
 
         }
 
-        session.drawWidgets();
+        if (!onHomeScreen) {
+          session.drawWidgets();
+        }
+        
       
     }
 
@@ -1295,6 +1298,47 @@ class Level {
       
     }
 
+
+  
+  //**************//
+  
+    drawWidget(htmlID, x, y, text, bgcolor, textcolor) {
+  
+      // NEED TO CHANGE to use settings
+  
+      let x_margin = (window.innerWidth * settings.canvas_w_correction - dimensions.canvas_width) / 2;
+      let w = Math.floor(dimensions.inputButton_W);
+      let div = document.getElementById(htmlID);
+      
+      div.innerText = text;
+      div.style.width = w + 'px';
+      div.style.height = w + 'px';
+      div.style.left = Math.floor(x_margin + (dimensions.canvas_width * x) - w/2) + 'px'; 
+      div.style.top = Math.floor((window.innerHeight - dimensions.canvas_height) / 2 + dimensions.canvas_height * y) + "px";
+      div.style.lineHeight = Math.floor(w) + "px";
+      div.style.borderRadius = Math.floor(w * settings.inputButtonBorderRadius) + 'px';
+      div.style.font = fonts.ifResult;
+      div.style.backgroundColor = bgcolor;
+      div.style.color = textcolor;
+      
+  
+  
+    }
+
+    drawQiWidget() {
+      // NEED TO CHANGE to use settings
+
+      //let qi = getCharAndPronunciation("qi");
+      let text = this.number;//qi + " Level:\n" + this.number;
+      let x = settings.ifResult_x;
+      let y = 0.05;
+      let bgcolor = '#16009680';
+      let textcolor = 'white';
+      let htmlID = 'qiWidget';
+  
+      this.drawWidget(htmlID, x, y, text, bgcolor, textcolor);
+    }
+
     
 
     buildSessions(plan) {
@@ -1417,36 +1461,10 @@ class FightingSession {
   }
 
 
-  drawQiWidget() {
-    let qi = getCharAndPronunciation("qi");
-    text = qi + " Level:\n" + this.number;
-    let x = dimensions.canvas_width * 0.05;
-    let y = dimensions.canvas_height * 0.20;
-    let bgcolor = '#16009680';
-    let textcolor = 'black';
-
-    this.drawWidget(x, y, text, bgcolor, textcolor);
-  }
-
-//**************//
-
-  drawWidget(x, y, text, bgcolor, textcolor) {
-    /*
-    context.beginPath();
-    // (centerX, centerY, radius, startingAngle, endingAngle)
-    context.arc(100, 75, 50, 0, 2 * Math.PI); 
-    //context.strokeStyle = bgcolor;
-    //context.stroke(); 
-    context.fillStyle = bgcolor;
-    context.fill();
-    */
-
-  }
-
   drawWidgets() {
     this.drawPlayerHealth();
     this.drawEnemyHealth();
-    this.level.drawQiWidget();
+    game.level.drawQiWidget();
   }
 
   resetProgress() {
