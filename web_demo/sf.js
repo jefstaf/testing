@@ -195,7 +195,7 @@ const backgroundSources = [
 ];
 
 const baddies = [
-  {id: 'ninja.black-red', type: 'ninja', colors: 'black-red', url: 'sprites/Ninja-black-red.png', spriteSheet: null},
+  {id: 'ninja.black-red', type: 'ninja', colors: 'black-red', url: 'sprites/Ninja-black-red-0-0.png', spriteSheet: null},
   {id: 'ninja.purple-pink-blue', type: 'ninja', colors: 'purple-pink-blue', url: 'sprites/Ninja-purple-pink-blue.png', spriteSheet: null}
 ];
 
@@ -327,7 +327,7 @@ const levelBackgrounds = [
 ];
 
 const levelPlans = [                     // ***** //
-    'fight:ninja.black-red_2+ninja.purple-pink-blue_1',
+    'fight:ninja.black-red_2',//+ninja.purple-pink-blue_1',
     'train:stroke_h:2',
     'train:char_one:2',
     'train:char_two:2, train:char_three:2',
@@ -348,8 +348,8 @@ function attack(e) {
 // HANZI WRITER ------------------------------------------
 
 var writer1 = HanziWriter.create('overlay-div-1', '一', {
-  width: 150,
-  height: 150,
+  width: dimensions.inputOverlaySize,
+  height: dimensions.inputOverlaySize,
   showCharacter: false,
   padding: 5,
 
@@ -367,8 +367,8 @@ var writer1 = HanziWriter.create('overlay-div-1', '一', {
 
 
 var writer2 = HanziWriter.create('overlay-div-2', '二', {
-  width: 150,
-  height: 150,
+  width: dimensions.inputOverlaySize,
+  height: dimensions.inputOverlaySize,
   showCharacter: false,
   padding: 5,
 
@@ -386,8 +386,8 @@ var writer2 = HanziWriter.create('overlay-div-2', '二', {
 //writer2.hideCharacter();
 
 var writer3 = HanziWriter.create('overlay-div-3', '三', {
-  width: 150,
-  height: 150,
+  width: dimensions.inputOverlaySize,
+  height: dimensions.inputOverlaySize,
   showCharacter: false,
   padding: 5,
 
@@ -419,6 +419,7 @@ writerT.quiz();
 function overlayCharacter(char, writerNum) {
   let writer = writers[writerNum - 1];
   writer.setCharacter(char);
+  writer.updateColor('drawingColor', '#a503fc');
   //writer.showCharacter();
 
 } 

@@ -27,8 +27,8 @@
             <!--</div>-->
             
             <!--<div id="allResults hideable hidden">-->
-                <div class="results overlay2 hideable hidden" id="oneResult">1</div>
-                <div class="results overlay2 hideable hidden" id="ifResult">if</div>
+                <div class="results overlay2 hideable hidden" id="oneResult"></div>
+                <div class="results overlay2 hideable hidden" id="ifResult"></div>
             <!--</div>-->
         </div>
 
@@ -95,8 +95,8 @@
               // Populates UI with (ordered) Hanzi matches
               function showResults(matches) {
                 var elmHost = $(".mmahLookupChars");
-                var elapsed = new Date().getTime() - _start;
-                $(".lookupTimerHL").text(elapsed + "ms");
+                /*var elapsed = new Date().getTime() - _start;
+                $(".lookupTimerHL").text(elapsed + "ms");*/
                 elmHost.html("");
                 for (var i = 0; i != matches.length; ++i) {
                   elmHost.append("<span>" + matches[i].hanzi + "</span>");
