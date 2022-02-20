@@ -60,7 +60,7 @@ var allowInput = false;
 
 var game;
 var timeCounter = 0;
-const GLOBAL_ANIMATION_RATE = 10;
+const GLOBAL_ANIMATION_RATE = 1;
 
 var settings = {
     portrait_mode: false,
@@ -195,7 +195,7 @@ const backgroundSources = [
 ];
 
 const baddies = [
-  {id: 'ninja.black-red', type: 'ninja', colors: 'black-red', url: 'sprites/Ninja-black-red-0-0.png', spriteSheet: null},
+  {id: 'ninja.black-red', type: 'ninja', colors: 'black-red', url: 'sprites/Ninja-black-red.png', spriteSheet: null},
   {id: 'ninja.purple-pink-blue', type: 'ninja', colors: 'purple-pink-blue', url: 'sprites/Ninja-purple-pink-blue.png', spriteSheet: null}
 ];
 
@@ -632,8 +632,11 @@ class Sprite {
 
     draw(sheet, sourceX, sourceY) {
         context.fillStyle = "pink";
+        if (sourceX < 0 || sourceY > (1600*20)) {
+          alert("Outside the sprite sheet");
+        }
         console.log(sheet, sourceX, sourceY, this.imageInfo.width, this.imageInfo.height);
-        context.fillRect(this.x, this.y, this.imageInfo.width, this.imageInfo.height);
+        context.fillRect(this.x, this.y, this.width, this.height);
         context.drawImage(sheet, sourceX, sourceY, this.imageInfo.width, this.imageInfo.height,
                         this.x, this.y, this.width, this.height); 
         //context.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
@@ -665,7 +668,7 @@ class Ninja extends Enemy {
     let sheet = baddie.spriteSheet;
     console.log("Sheet:", sheet);
     this.imageInfo = { sheet : sheet,
-      sheetVerticalOffset : 0,
+      sheetVerticalOffset : 4800,
       sheetHorizontalOffset : 30400,
       imgQty : 20,
       width : 1600,
