@@ -60,6 +60,7 @@ var allowInput = false;
 
 var game;
 var timeCounter = 0;
+const GLOBAL_ANIMATION_RATE = 10;
 
 var settings = {
     portrait_mode: false,
@@ -122,8 +123,6 @@ var dimensions = {
     ifResultSize: 0, // set by adjustOverlay function
     oneResultSize: 0 // set by adjustOverlay function
 }
-
-
 
 
 const targetLangOptions = ['zh_CN', 'zh_TW', 'ja']; // not currently in use
@@ -193,7 +192,12 @@ const backgroundSources = [
   { id: 'bamboo_green', url: 'images/bamboo_green.png', rotateOnPortrait: false, align: 'top_left', ratio: 1.0, img: null},
   { id: 'bw_dragonflies', url: 'images/bw_dragonflies.png', rotateOnPortrait: false, align: 'top_right', ratio: 1.0, img: null},
   { id: 'plum_blossom_left', url: 'images/plum_blossom_left.png', rotateOnPortrait: false, align: 'center_left', ratio: 1.0, img: null}
-]
+];
+
+const baddies = [
+  {id: 'ninja.black-red', type: 'ninja', colors: 'black-red', url: 'sprites/Ninja-black-red.png', spriteSheet: null},
+  {id: 'ninja.purple-pink-blue', type: 'ninja', colors: 'purple-pink-blue', url: 'sprites/Ninja-purple-pink-blue.png', spriteSheet: null}
+];
 
 
 function getOverlaySizes() {
@@ -202,7 +206,7 @@ function getOverlaySizes() {
     dimensions.inputButton_H = dimensions.canvas_width * settings.inputButton_height;
     dimensions.oneResultSize = dimensions.canvas_width * settings.oneResult_size;
     dimensions.ifResultSize = dimensions.canvas_width * settings.ifResult_size; 
-  }
+}
 
 function updateFontSizes() {
     fonts.titleLarge = Math.floor(dimensions.canvas_width * 0.30) + "px STXingKai";
@@ -218,8 +222,6 @@ function updateFontSizes() {
     fonts.oneResult = Math.floor(dimensions.oneResultSize * (1-settings.oneResultTextPadding)) + "px STXingKai";
     fonts.ifResult = Math.floor(dimensions.ifResultSize) + "px STXingKai";
 }
-
-
 
 
 
@@ -325,10 +327,9 @@ const levelBackgrounds = [
 ];
 
 const levelPlans = [                     // ***** //
-    'fight:goomba:3',
+    'fight:ninja.black-red_2+ninja.purple-pink-blue_1',
     'train:stroke_h:2',
     'train:char_one:2',
-    'build:char_two',
     'train:char_two:2, train:char_three:2',
     'train:stroke_s:3, train:char_ten:3',
     'train:char_dry:3',
@@ -524,13 +525,30 @@ function turnOffInput() {
 // SPRITES ------------------------------------------
 
 
+function loadBaddies() {
+    
+  for (let i = 0; i < baddies.length; i++) {
+      console.log("Loading baddie " + i + "...");
+      let img = new Image();
+
+      img.addEventListener('load', function() {
+          baddies[i].spriteSheet = img;
+          console.log("Loaded baddie " + i + ": " + baddies[i].id);
+      });
+
+      document.appendChild.img;
+      console.log(baddies[i].url)
+      img.src = baddies[i].url;
+  }       
+}
+
 class Sprite {
-    constructor(x, y, spriteSheet) {
+    constructor(x, y) {
         this.x = x;
         this.y = y;                     
         this.speedX = 0;     
         this.speedY = 0;
-        this.imageInfo = { sheet : spriteSheet,
+        this.imageInfo = { sheet : null,
                             sheetVerticalOffset : 0,
                             sheetHorizontalOffset : 0,
                             imgQty : 1,
@@ -540,7 +558,8 @@ class Sprite {
                             rightBuffer : 0,
                             topBuffer : 0,
                             bottomBuffer : 0,
-                            animationRate : GLOBAL_ANIMATION_RATE
+                            animationRate : GLOBAL_ANIMATION_RATE,
+                            reverse: true
                           }; 
 
         this.calculateSides();
@@ -569,7 +588,7 @@ class Sprite {
         this.visualRight = this.right - this.rightBuffer;
         this.visualTop = this.top + this.topBuffer;
         this.visualBottom = this.bottom - this.bottomBuffer;
-  }
+    }
 
     newPos() {
         this.x += this.speedX;
@@ -611,29 +630,57 @@ class Sprite {
     }
 
     draw(sheet, sourceX, sourceY) {
-        game.ctx.drawImage(sheet, sourceX, sourceY, this.width, this.height,
+        context.drawImage(sheet, sourceX, sourceY, this.width, this.height,
                         this.x, this.y, this.width, this.height); 
     }
 
 }
 
 class Player extends Sprite {
-  constructor(x, y, spriteSheet) {
-    super(x, y, spriteSheet)
+  constructor(x, y) {
+    super(x, y)
   }
 
 }
 
 class Enemy extends Sprite {
-  constructor() {
-    super(x, y, spriteSheet)
+  constructor(x, y) {
+    super(x, y);
+  }
+}
+
+
+class Ninja extends Enemy {
+  constructor(colors, x, y) {
+    super(x, y);
+    this.imgID = 'ninja.' + colors;
+    console.log("imgID:", this.imgID);
+    let baddie = baddies.find(guy => guy.id === this.imgID);
+    console.log("Baddie:", baddie);
+    let sheet = baddie.spriteSheet;
+    console.log("Sheet:", sheet);
+    this.imageInfo = { sheet : sheet,
+      sheetVerticalOffset : 0,
+      sheetHorizontalOffset : 0,
+      imgQty : 20,
+      width : 1600,
+      height : 1600, 
+      leftBuffer : 400,
+      rightBuffer : 600,
+      topBuffer : 400,
+      bottomBuffer : 200,
+      animationRate : GLOBAL_ANIMATION_RATE,
+      reverse: true
+    };
+    this.action = "idling"; 
   }
 }
 
 
 
 
-// LEVELS AND SESSIONS ------------------------------
+
+// GAME, LEVEL AND SESSION CLASSES ------------------------------
 
 class Game {
     constructor() { 
@@ -705,6 +752,17 @@ class Game {
   
     animate() {
         game.level.drawOpeningText();
+        let session = game.currentSession;
+
+        if (session instanceof FightingSession) {
+          for (let j = 0; j < session.enemies.length; j++) {
+            let e = session.enemies[j];
+            e.newPos();
+            e.calculateSides();
+            e.animate();
+          }
+        }
+      
     }
 
     
@@ -856,16 +914,16 @@ class Level {
         if (this.game.currentSession instanceof FightingSession) {
             settings.writerCount = 3;
             turnOnInput();  
-            this.spawnEnemies();
         } else if (this.game.currentSession instanceof TrainingSession) {
             // training session
             settings.writerCount = 3;
             turnOffInput(); 
         } else {
-            // build
+            // BuildingSession
             settings.writerCount = 3;
             turnOffInput(); 
         }
+        this.game.currentSession.begin();
     }
 
     nextSession() {
@@ -927,8 +985,11 @@ class Level {
             text = "Fight!"
             y = dimensions.canvas_height * (settings.topText_y * 2);
             fontString = fonts['titleSmall'];
+        } else if (session instanceof BuildingSession) {
+            text = "Build new characters..."
+
         } else {
-            // neither training nor fighting?
+            // undefined
             //console.log("NO SESSION FOUND");
         }
       
@@ -962,8 +1023,11 @@ class Level {
         } else if (session instanceof FightingSession) {
             // fighting session - no info text
 
+        } else if (session instanceof BuildingSession) {
+          // fighting session - no info text
+
         } else {
-            // neither training nor fighting?
+            // undefined
           	//console.log("NO SESSION FOUND");
         }
 
@@ -1050,8 +1114,12 @@ class Level {
         // fighting session - not yet built
         
         
+      } else if (session instanceof BuildingSession) {
+        // building session 
+        
+        
       } else {
-        // neither training nor fighting?
+        // undefined
         //console.log("NO SESSION FOUND");
       }
         
@@ -1064,11 +1132,6 @@ class Level {
         let fontString = fonts['instructions'];
         game.drawText(text, x, y, alignment, fontString);
       }
-      
-    }
-
-
-    spawnEnemies() {
       
     }
 
@@ -1109,17 +1172,60 @@ class Level {
 class FightingSession {
   constructor(target) {
     //this.currentSequence = "";
+    this.target = target;
+    this.enemyData;
+    this.baddies = [];  // data objects from 'baddies'
+    this.enemies = [];    
+    this.enemiesAlive;
+    this.decomposeTarget();
+
+  }
+
+  decomposeTarget() {
+    this.enemyData = this.target.split('+');  // ['ninja.black-red_3', 'ninja.purple-pink-blue_1']
+    for (let i = 0; i < this.enemyData.length; i++) {
+      let enemyArray = this.enemyData[i].split('_');    // ['ninja.black-red', '3']
+      let enemyID = enemyArray[0];      // 'ninja.black-red'
+      let enemyCount = enemyArray[1];                   // '3'
+      let enemyObject = baddies.find(guy => guy.id === enemyID);
+
+      for (let j = 0; j < enemyCount; j++) {
+        this.baddies.push(enemyObject);             // data objects from 'baddies'
+      }
+      
+    }
+
+  }
+
+  spawnEnemies() { // goomba
+    for (let i = 0; i < this.baddies.length; i++) {
+      let guy = this.baddies[i];
+      let x = 400;
+      let y = 400;
+
+      if (guy.type == 'ninja') {
+        this.enemies.push(new Ninja(guy.colors, x, y));
+      } else {
+        // undefined bad guy type
+      }
+    }
+
+
   }
 
   resetProgress() {
     //this.currentSequence = "";
       
   }
+
+  begin() {
+    this.spawnEnemies();
+  }
 }
 
 class BuildingSession {
   constructor(target) {
-
+    this.target = target;   // suggestion what to build. after the beginning of the game, usually an empty string
   }
 
   resetProgress() {
@@ -1152,7 +1258,6 @@ class TrainingSession {
     
     this.currentSequence = "";
 
-    this.startQuiz();
   }
 
   decomposeTarget() {
@@ -1245,7 +1350,7 @@ class TrainingSession {
   }
 
 
-  startQuiz() {
+  begin() {
       overlayCharacterQuiz(this.quizTargetFull, 2);
   }
 
@@ -1903,7 +2008,6 @@ function launchGame() {
 
 function loadBackgrounds() {
     
-  
     for (let i = 0; i < backgroundSources.length; i++) {
   
         //console.log("Loading bg image " + i + "...");
@@ -1923,12 +2027,7 @@ function loadBackgrounds() {
         let div = document.getElementById('canvas-wrap');
         div.appendChild.img;
         img.src = backgroundSources[i].url;
-
-
-    }
-
-    
-          
+    }       
 }
 
 // FONTS ------------------
@@ -1996,6 +2095,8 @@ function loadFonts() {
 }
 
 
+
+
 // ANIMATION ----------------------------------------
 
 function update() {
@@ -2013,6 +2114,7 @@ function start() {
     createCanvas();
     createEventListeners();
     loadBackgrounds();
+    loadBaddies();
     launchHomeScreen();
 
 }
