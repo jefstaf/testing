@@ -389,7 +389,7 @@ function attack(e) { // receives event from clicking ifResult box
   let targetedEnemy = null;
   let damagePoints;
 
-  e = "十" // TESTING for development only
+  //e = "十" // TESTING for development only
   
   if (isNaN(e)) {
     // normal
@@ -761,7 +761,28 @@ class LivingBeing extends Sprite {
   }
 
   die() {
-    console.log("Died");
+    if (this instanceof Enemy) {
+      console.log("Enemy #", this.enemiesIndex, "Died");
+    } else if (this instanceof Player) {
+      console.log("Player Died");
+    }
+
+    
+    let session = game.currentSession;
+    let anyEnemiesAlive = false;
+    for (let i = 0; i < session.enemies.length; i++) {
+      let guy = session.enemies[i];
+      if(guy.currentHealth > 0) {
+        anyEnemiesAlive = true;
+        break;
+      }
+      
+    }
+    
+    if (!anyEnemiesAlive) {
+      game.level.nextSession();
+    } 
+    
   }
 }
 
