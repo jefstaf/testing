@@ -711,6 +711,10 @@ class Sprite {
     } 
 
     animate() {
+
+        if (this instanceof LivingBeing) {
+          this.checkAttackTimer();
+        }
         
         var current = this.currentImageIndex;
         var imgQty = this.imageInfo.imgQty;
@@ -728,6 +732,7 @@ class Sprite {
             } else {
                 if (current + 1 < imgQty) {
                     this.currentImageIndex += 1;
+                    if (this.action == "attacking") { this.attackTimer++; }
                 } else {
                     this.currentImageIndex = 0;
                 }
@@ -763,6 +768,12 @@ class Sprite {
 class LivingBeing extends Sprite {
   constructor(x, y) {
     super(x, y);
+  }
+
+  checkAttackTimer() {
+    if (this.action == "attacking" && this.attackTimer > this.imageInfo.imgQty) {
+      this.idle();
+    }
   }
 
   getHit(damagePoints) {
@@ -814,7 +825,7 @@ class Player extends LivingBeing {
       animationRate : GLOBAL_ANIMATION_RATE,
       reverse: false
     };
-    this.action = "idling"; // not yet in use
+    this.action = "idling"; 
     this.desiredScreenProportion = .65; // includes whitespace on all sides
     this.scale = this.getScale(this.desiredScreenProportion);
     this.currentImageIndex = randomInt(0,this.imgQty);
@@ -826,12 +837,14 @@ class Player extends LivingBeing {
   attack() {
     this.action = "attacking";
     this.imageInfo.sheetVerticalOffset = 600;
+    this.currentImageIndex = 0;
   }
 
   idle() {
-    this.action = "attacking";
+    this.action = "idling";
     this.imageInfo.sheetVerticalOffset = 0;
-
+    this.attackTimer = 0;
+    this.currentImageIndex = 0;
   }
 
 }
