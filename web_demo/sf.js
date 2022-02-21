@@ -9,8 +9,6 @@
   IN-GAME HOME BOARD, CHOOSE TO TRAIN, FIGHT, OR BUILD
 
 - onscreen meters:
-    - player health
-    - qi level
     - skills/weapons? (equip water, fire, etc.?)
     - max stroke number
     - max character complexity
@@ -355,28 +353,31 @@ function updateAllowableChars() { // change to only add new ones
 // LEVEL DATA (levelData) ------------------------------------------- 
 
 const levelBackgrounds = [
-  ['blue_purple_paper', 'full_screen_chop'],
-  ['pink_blob', 'full_screen_chop', 'bamboo_brown'],
-  ['blue_purple_paper', 'full_screen_chop'],  
-  ['pale_yellow', 'full_screen_chop', 'bamboo_green'],
-  ['plum_blossom_left', 'full_screen_chop'],
   ['pale_yellow', 'full_screen_chop'],
+  ['pink_blob', 'full_screen_chop', 'bamboo_brown'],
+  ['blue_purple_paper', 'full_screen_chop'],
+  ['brown_paper', 'full_screen_chop', 'bamboo_brown'],
+  ['multicolor_paint', 'full_screen_chop', 'bamboo_brown'],
+  ['pale_yellow', 'full_screen_chop', 'bamboo_green'],
+  ['blue_purple_paper', 'full_screen_chop'],  
+  ['plum_blossom_left', 'full_screen_chop'],
   ['pink_blob', 'full_screen_chop', 'bw_dragonflies'],
   ['multicolor_paint', 'full_screen_chop', 'bamboo_brown'],
   ['pale_yellow', 'full_screen_chop', 'plum_blossom_left'],
-  ['brown_paper', 'full_screen_chop', 'bamboo_brown'],
   ['blue_purple_paper', 'full_screen_chop', 'bamboo_brown'],
   ['pale_yellow', 'full_screen_chop', 'bamboo_green']
 ];
 
-const levelPlans = [                     // ***** //
-    'fight:ninja.black-red_2',//+ninja.purple-pink-blue_1',
-    'train:stroke_h:2',
-    'train:char_one:2',
-    'train:char_two:2, train:char_three:2',
-    'train:stroke_s:3, train:char_ten:3',
-    'train:char_dry:3',
-    'train:char_king:4'
+const levelPlans = [                     
+  'train:stroke_h:2',
+  'train:char_one:2',
+  'fight:ninja.black-red_1',
+  'train:char_two:2, train:char_three:2',
+  'fight:ninja.black-red_2',
+  'train:stroke_s:3, train:char_ten:2',
+  'fight:ninja.purple-pink-blue_1',
+  'train:char_king:2',
+  'fight:ninja.purple-pink-blue_1'
 ];
 
 
@@ -1112,11 +1113,8 @@ class Game {
     handleFightingInput(inputCode) {
       console.log("inputCode:", inputCode);
 
-      attack(2);
+      attack(parseInt(inputCode));
 
-
-      
-      
     }
     
 
@@ -1697,7 +1695,7 @@ class TrainingSession {
       }
 
       this.getTargetStroke();
-      this.startQuiz();
+      this.begin();
       
   }
 
@@ -2213,9 +2211,9 @@ function handleKeyDown(e) {
   //console.log("Pressed: Key: " + e.key + " Code: " + e.code);
 
   
-  //if (game && game.wantsNextStroke) {
-    //game.handleInput(e.key);        
-  //}
+  if (game) {
+    game.handleInput(e.key);        
+  }
   
 
 }
