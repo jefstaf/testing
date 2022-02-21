@@ -180,7 +180,12 @@ const attacks = [
   {id: "han_chinese", damage: 10}
 ]
 
-
+const playerSpriteSheet = new Image();
+playerSpriteSheet.addEventListener('load', function() {
+  console.log("Loaded player sprite");
+});
+document.appendChild.img;
+playerSpriteSheet.src = 'sprites/Player-girl.png';
 
 const goodJobMessages = [
   'OK!',
@@ -222,7 +227,7 @@ const backgroundSources = [
 
 const baddies = [
   {id: 'ninja.black-red', type: 'ninja', colors: 'black-red', url: 'sprites/Ninja-black-red-50-twoActions.png', maxHealth: 10, spriteSheet: null},
-  {id: 'ninja.purple-pink-blue', type: 'ninja', colors: 'purple-pink-blue', url: 'sprites/Ninja-purple-pink-blue.png', maxHealth: 20, spriteSheet: null}
+  {id: 'ninja.purple-pink-blue', type: 'ninja', colors: 'purple-pink-blue', url: 'sprites/Ninja-purple-pink-blue-50-twoActions.png', maxHealth: 20, spriteSheet: null}
 ];
 
 
@@ -374,6 +379,8 @@ const levelPlans = [                     // ***** //
     'train:char_king:4'
 ];
 
+
+
 // HANZI LOOKUP INPUT -----------------------------------
 
 function attack(e) { // receives event from clicking ifResult box
@@ -407,7 +414,7 @@ function attack(e) { // receives event from clicking ifResult box
     damagePoints = e;
   }
                    
-
+  // get targeted enemy
   for (let i = 0; i < session.enemies.length; i++) {
     let guy = session.enemies[i];
     console.log(guy.currentHealth);
@@ -418,10 +425,16 @@ function attack(e) { // receives event from clicking ifResult box
     
   }
   
+  // hurt targeted enemy
   if (!targetedEnemy) {
     console.log("All enemies at ZERO")
   } else {
     targetedEnemy.getHit(damagePoints);
+  }
+
+  // player attack function
+  if (game && game.player) {
+    game.player.attack();
   }
 
 
@@ -698,6 +711,7 @@ class Sprite {
     } 
 
     animate() {
+        
         var current = this.currentImageIndex;
         var imgQty = this.imageInfo.imgQty;
 
@@ -732,12 +746,13 @@ class Sprite {
     }
 
     draw(sheet, sourceX, sourceY) {
+      
         context.fillStyle = "pink";
         if (sourceX < 0 || sourceX > this.imageInfo.sheetHorizontalOffset + this.imageInfo.imgQty * this.imageInfo.width) {
           console.log("Attempted to load image outside the sprite sheet");
         }
         //console.log(sheet, sourceX, sourceY, this.imageInfo.width, this.imageInfo.height);
-        //context.fillRect(this.x, this.y, this.width, this.height);
+        //context.fillRect(this.left, this.top, this.width, this.height);
         context.drawImage(sheet, sourceX, sourceY, this.imageInfo.width, this.imageInfo.height,
                         this.left, this.top, this.width, this.height); 
         //context.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
@@ -761,7 +776,7 @@ class LivingBeing extends Sprite {
     if (this instanceof Enemy) {
       console.log("Enemy #", this.enemiesIndex, "Died");
     } else if (this instanceof Player) {
-      console.log("Player Died");
+      console.log("player died");
     }
 
     
@@ -786,8 +801,37 @@ class LivingBeing extends Sprite {
 class Player extends LivingBeing {
   constructor(x, y) {
     super(x, y);
+    this.imageInfo = { sheet : playerSpriteSheet,
+      sheetVerticalOffset : 0,
+      sheetHorizontalOffset : 0,
+      imgQty : 10,
+      width : 600,
+      height : 600, 
+      leftBuffer : 0,
+      rightBuffer : 300,
+      topBuffer : 100,
+      bottomBuffer : 0,
+      animationRate : GLOBAL_ANIMATION_RATE,
+      reverse: false
+    };
+    this.action = "idling"; // not yet in use
+    this.desiredScreenProportion = .65; // includes whitespace on all sides
+    this.scale = this.getScale(this.desiredScreenProportion);
+    this.currentImageIndex = randomInt(0,this.imgQty);
+
     this.maxHealth = 100;
     this.currentHealth = this.maxHealth;
+  }
+
+  attack() {
+    this.action = "attacking";
+    this.imageInfo.sheetVerticalOffset = 600;
+  }
+
+  idle() {
+    this.action = "attacking";
+    this.imageInfo.sheetVerticalOffset = 0;
+
   }
 
 }
@@ -827,9 +871,6 @@ class Ninja extends Enemy {
     this.maxHealth = baddie.maxHealth;
     this.currentHealth = this.maxHealth;
   }
-
-
-
 
 }
 
@@ -900,8 +941,8 @@ class Game {
     }
 
     spawnPlayer() {
-      let x = dimensions.canvas_width * 0.15;
-      let y = dimensions.canvas_height * 0.50;
+      let x = dimensions.canvas_width * 0.30; // center but includes whitespace
+      let y = dimensions.canvas_height * 0.50; // center but includes whitespace
       this.player = new Player(x, y);
     }
   
@@ -929,6 +970,14 @@ class Game {
               e.animate();
             }
             
+          }
+
+          // draw player
+          if (game && game.player) {
+            game.player.getScale(game.player.desiredScreenProportion);
+            game.player.newPos();
+            game.player.calculateSides();
+            game.player.animate();
           }
 
 
