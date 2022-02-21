@@ -769,10 +769,13 @@ class Sprite {
 class LivingBeing extends Sprite {
   constructor(x, y) {
     super(x, y);
+    this.attackTimer = 0;
   }
 
   checkAttackTimer() {
+    console.log("attack timer:", this.attackTimer);
     if (this.action == "attacking" && this.attackTimer > this.imageInfo.imgQty) {
+      console.log("should idle");
       this.idle();
     }
   }
@@ -1519,7 +1522,7 @@ class FightingSession {
     percentHealthRemaining = totalCurrentHealth / totalMaxHealth;
     
     // draw current health meter
-    y_reduction = h * (1 - percentHealthRemaining);
+    y_reduction = Math.max(h * (1 - percentHealthRemaining),0);
     context.fillStyle = '#e31111';
     context.fillRect(x, y + y_reduction, w, h - y_reduction);
 
@@ -1549,7 +1552,7 @@ class FightingSession {
     percentHealthRemaining = totalCurrentHealth / totalMaxHealth;
     
     // draw current health meter
-    y_reduction = h * (1 - percentHealthRemaining);
+    y_reduction = Math.max(h * (1 - percentHealthRemaining),0);
     context.fillStyle = 'green';
     context.fillRect(x, y + y_reduction, w, h - y_reduction);
   }
